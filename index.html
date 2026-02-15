@@ -106,31 +106,31 @@ primary_protocol:"03.02",related_protocols:["01.01"],level_min:"E",
 questions:[
  {phase:"assessment",prompt:"What is your primary clinical impression?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Acute Coronary Syndrome — crushing substernal chest pain, diaphoresis, radiation to left arm, cardiac risk factors",correct:true,explanation:"Classic ACS presentation: substernal chest pain with radiation, diaphoresis, dyspnea, and significant cardiac risk factors.",protocol_ref:"03.02"},
-   {text:"Pulmonary embolism",correct:false,explanation:"While PE can cause chest pain and dyspnea, the crushing substernal quality with left arm radiation is more classic for ACS.",protocol_ref:"03.02"},
-   {text:"Gastroesophageal reflux",correct:false,explanation:"GERD can mimic cardiac pain, but with these risk factors and presentation, ACS must be assumed.",protocol_ref:"03.02"},
-   {text:"Anxiety attack",correct:false,explanation:"Never assume anxiety in a 62yo male with cardiac risk factors and classic symptoms.",protocol_ref:"03.02"}
+   {text:"Acute Coronary Syndrome based on presentation and risk factor profile",correct:true,explanation:"Classic ACS presentation: substernal chest pain with radiation, diaphoresis, dyspnea, and significant cardiac risk factors (HTN, hyperlipidemia, former smoker, age/sex).",protocol_ref:"03.02"},
+   {text:"Pulmonary embolism given the acute dyspnea and tachycardia",correct:false,explanation:"While PE can cause chest pain and dyspnea, the crushing substernal quality with left arm radiation is more classic for ACS. PE typically presents with pleuritic pain.",protocol_ref:"03.02"},
+   {text:"Esophageal spasm secondary to recent food ingestion at the restaurant",correct:false,explanation:"Esophageal spasm can mimic cardiac pain, but with these risk factors and classic presentation, ACS must be the working impression.",protocol_ref:"03.02"},
+   {text:"Hypertensive emergency given the BP of 164/98 with chest pain",correct:false,explanation:"While BP is elevated, the presentation is most consistent with ACS. The hypertension is likely a sympathetic response to pain and ischemia, not the primary problem.",protocol_ref:"03.02"}
   ]},
  {phase:"treatment",prompt:"What is your initial treatment for this patient?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Aspirin 324mg (4 x 81mg chewed) and assist with patient's prescribed nitroglycerin if SBP ≥ 100",correct:true,explanation:"Per Protocol 03.02: Aspirin 81mg x4 orally (chewed) unless allergic. For patients prescribed nitroglycerin with SBP ≥ 100, administer 0.3/0.4mg SL.",protocol_ref:"03.02"},
-   {text:"Nitroglycerin only, no aspirin needed in the field",correct:false,explanation:"Aspirin is a critical early intervention for ACS. Both aspirin and nitro (if prescribed) should be given.",protocol_ref:"03.02"},
-   {text:"Morphine 4mg IV for pain control first",correct:false,explanation:"Morphine is not first-line. Aspirin and nitro are priority interventions.",protocol_ref:"03.02"},
-   {text:"Apply oxygen only and transport",correct:false,explanation:"While oxygen may be indicated, aspirin should not be delayed.",protocol_ref:"03.02"}
+   {text:"Aspirin 324mg PO chewed and assist with prescribed nitroglycerin if SBP ≥ 100",correct:true,explanation:"Per Protocol 03.02: Aspirin 81mg x4 orally (chewed) unless allergic. For patients prescribed nitroglycerin with SBP ≥ 100, administer 0.3/0.4mg SL.",protocol_ref:"03.02"},
+   {text:"Establish IV access and administer morphine 4mg IV for pain management first",correct:false,explanation:"Morphine is not first-line for ACS. Aspirin is the critical early intervention and should not be delayed for IV access or pain medication.",protocol_ref:"03.02"},
+   {text:"Administer nitroglycerin 0.4mg SL first, then aspirin 162mg PO if pain persists",correct:false,explanation:"Aspirin dose is 324mg (4x81mg), not 162mg. Aspirin should be given regardless of pain response, and simultaneously with nitro, not sequentially.",protocol_ref:"03.02"},
+   {text:"Apply high-flow O2 via NRB at 15 LPM, obtain 12-lead ECG, and defer medications to the ED",correct:false,explanation:"While oxygen and ECG are important, aspirin should not be delayed. Prehospital aspirin administration improves outcomes in ACS.",protocol_ref:"03.02"}
   ]},
  {phase:"treatment",prompt:"A 12-lead ECG shows ST elevation in leads II, III, and aVF. What is your next action?",multi_select:false,level_filter:"ACP",
   options:[
-   {text:"Transmit ECG to medical control at nearest PCI facility, activate CODE STEMI, limit scene time to ≤ 10 minutes",correct:true,explanation:"Per Protocol 03.02: If ECG suggestive of STEMI — limit scene time ≤ 10 min, triage to nearest PCI capable facility, provide immediate CODE STEMI notification.",protocol_ref:"03.02"},
-   {text:"Transport to the nearest emergency department regardless of PCI capability",correct:false,explanation:"STEMI patients should be triaged to a PCI-capable facility for timely intervention.",protocol_ref:"03.02"},
-   {text:"Administer thrombolytics in the field",correct:false,explanation:"Field thrombolytics are not part of RI protocol. PCI is the preferred reperfusion strategy.",protocol_ref:"03.02"},
-   {text:"Wait for a second ECG to confirm before activating STEMI alert",correct:false,explanation:"Do not delay STEMI activation. Time is myocardium.",protocol_ref:"03.02"}
+   {text:"Transmit ECG to medical control, activate CODE STEMI, and limit scene time to 10 minutes or less",correct:true,explanation:"Per Protocol 03.02: If ECG suggestive of STEMI — limit scene time ≤ 10 min, triage to nearest PCI capable facility, provide immediate CODE STEMI notification.",protocol_ref:"03.02"},
+   {text:"Obtain a repeat 12-lead in 15 minutes to confirm ST changes before activating any alerts",correct:false,explanation:"Do not delay STEMI activation for serial ECGs. Time is myocardium — immediate notification is critical for PCI door-to-balloon times.",protocol_ref:"03.02"},
+   {text:"Administer nitroglycerin 0.4mg SL and reassess ECG to see if ST changes resolve first",correct:false,explanation:"Nitro may be given per protocol but should not delay STEMI activation. ST elevation requires immediate CODE STEMI notification regardless of nitro response.",protocol_ref:"03.02"},
+   {text:"Transport to the nearest emergency department and let them interpret the ECG on arrival",correct:false,explanation:"STEMI patients should be triaged to a PCI-capable facility with pre-arrival notification, not just the closest ED.",protocol_ref:"03.02"}
   ]},
  {phase:"transport",prompt:"Where should this STEMI patient be transported?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Nearest PCI-capable facility with CODE STEMI activation",correct:true,explanation:"Per Protocol 03.02: STEMI patients are triaged to the nearest PCI-capable facility.",protocol_ref:"03.02"},
-   {text:"Closest hospital regardless of capabilities",correct:false,explanation:"STEMI patients benefit from direct transport to PCI-capable facilities.",protocol_ref:"03.02"},
-   {text:"Patient's preferred hospital",correct:false,explanation:"Patient preference does not override clinical need for PCI.",protocol_ref:"03.02"},
-   {text:"Hospital with the shortest wait time",correct:false,explanation:"PCI capability is the determining factor, not wait time.",protocol_ref:"03.02"}
+   {text:"Nearest PCI-capable facility with CODE STEMI pre-arrival notification activated",correct:true,explanation:"Per Protocol 03.02: STEMI patients are triaged to the nearest PCI-capable facility with pre-notification.",protocol_ref:"03.02"},
+   {text:"Nearest emergency department for stabilization, then arrange interfacility transfer to PCI center",correct:false,explanation:"Direct transport to PCI-capable facility is preferred. Stopping at a non-PCI hospital delays reperfusion and worsens outcomes.",protocol_ref:"03.02"},
+   {text:"Nearest community hospital since the inferior STEMI is lower risk than anterior STEMI",correct:false,explanation:"All STEMI patients require PCI-capable facilities regardless of which wall is involved. Inferior STEMIs can still be life-threatening.",protocol_ref:"03.02"},
+   {text:"Closest facility with a cardiac catheterization lab, even if not a designated STEMI center",correct:false,explanation:"Transport should be to a designated PCI-capable STEMI receiving center with activated CODE STEMI, not just any hospital with a cath lab.",protocol_ref:"03.02"}
   ]}
 ]},
 
@@ -145,24 +145,24 @@ primary_protocol:"02.12",related_protocols:["01.01"],level_min:"E",
 questions:[
  {phase:"assessment",prompt:"Based on your assessment, what is your primary impression?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Acute ischemic stroke — sudden onset facial droop, arm weakness, speech changes with identifiable last known well time",correct:true,explanation:"Sudden onset unilateral facial droop, arm weakness, and speech difficulty are hallmark stroke symptoms. Cincinnati Stroke Scale is positive.",protocol_ref:"02.12"},
-   {text:"Bell's palsy",correct:false,explanation:"Bell's palsy affects the entire side of the face and doesn't cause arm weakness or speech changes.",protocol_ref:"02.12"},
-   {text:"Hypoglycemia",correct:false,explanation:"Blood glucose is 118 mg/dL — normal. Hypoglycemia can mimic stroke but is ruled out here.",protocol_ref:"02.12"},
-   {text:"TIA — it will resolve on its own",correct:false,explanation:"You cannot distinguish TIA from stroke in the field. Treat as stroke and transport emergently.",protocol_ref:"02.12"}
+   {text:"Acute stroke with positive Cincinnati Stroke Scale and identifiable last known well time",correct:true,explanation:"Sudden onset unilateral facial droop, arm weakness, and speech difficulty are hallmark stroke symptoms. Cincinnati Stroke Scale is positive for all three elements.",protocol_ref:"02.12"},
+   {text:"Bell's palsy given the acute onset of unilateral facial droop and speech difficulty",correct:false,explanation:"Bell's palsy affects the entire side of the face (upper and lower) and does not cause arm weakness or slurred speech. This presentation is stroke until proven otherwise.",protocol_ref:"02.12"},
+   {text:"Hypoglycemic episode secondary to her diabetes and metformin use",correct:false,explanation:"Blood glucose is 118 mg/dL — normal. While hypoglycemia can mimic stroke, it is ruled out by the normal glucose reading.",protocol_ref:"02.12"},
+   {text:"Transient ischemic attack since symptoms started only 25 minutes ago",correct:false,explanation:"TIA cannot be distinguished from stroke in the field. All suspected stroke patients must be treated as acute stroke and transported emergently.",protocol_ref:"02.12"}
   ]},
  {phase:"treatment",prompt:"What is critical to document for this patient?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Last known well time, stroke scale findings, blood glucose, and current anticoagulant use",correct:true,explanation:"Per Protocol 02.12: Establish and document last known well time, perform stroke assessment, blood glucose, and note anticoagulant use — all critical for hospital treatment decisions.",protocol_ref:"02.12"},
-   {text:"Only the time you arrived on scene",correct:false,explanation:"Last known well time is far more important than EMS arrival time for treatment decisions.",protocol_ref:"02.12"},
-   {text:"Family medical history",correct:false,explanation:"While useful, LKW time and stroke scale are the priority documentation.",protocol_ref:"02.12"},
-   {text:"Detailed medication reconciliation",correct:false,explanation:"Anticoagulant use is important but LKW time is the most critical piece.",protocol_ref:"02.12"}
+   {text:"Last known well time, stroke scale findings, blood glucose, and anticoagulant use",correct:true,explanation:"Per Protocol 02.12: Establish and document last known well time, perform stroke assessment, blood glucose, and note anticoagulant use — all critical for hospital tPA/thrombectomy decisions.",protocol_ref:"02.12"},
+   {text:"Symptom onset time, detailed neurological exam, GCS trend, and pupil reactivity",correct:false,explanation:"While some of these are useful, the LAST KNOWN WELL time (not onset time) is what determines tPA eligibility. Anticoagulant use (Warfarin) is critical for treatment decisions.",protocol_ref:"02.12"},
+   {text:"Time of 911 call, EMS arrival time, complete medication list, and family history of stroke",correct:false,explanation:"EMS times are automatically documented. Last known well time and anticoagulant use are far more important for treatment decisions than family history.",protocol_ref:"02.12"},
+   {text:"Blood pressure trend every 5 minutes, oxygen saturation, ECG rhythm, and temperature",correct:false,explanation:"While vitals are important, the critical stroke-specific documentation is LKW time, stroke scale, glucose, and anticoagulant use.",protocol_ref:"02.12"}
   ]},
  {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Nearest certified stroke center with pre-arrival notification",correct:true,explanation:"Per Protocol 02.12: Transport to nearest appropriate stroke center. Pre-notify the receiving facility.",protocol_ref:"02.12"},
-   {text:"Closest hospital",correct:false,explanation:"Stroke patients should go to stroke-capable facilities for time-sensitive interventions.",protocol_ref:"02.12"},
-   {text:"Patient's PCP office",correct:false,explanation:"Acute stroke requires emergency department evaluation, not outpatient care.",protocol_ref:"02.12"},
-   {text:"Hospital closest to patient's home for family convenience",correct:false,explanation:"Stroke center capability takes priority over convenience.",protocol_ref:"02.12"}
+   {text:"Nearest certified stroke center with pre-arrival stroke alert notification",correct:true,explanation:"Per Protocol 02.12: Transport to nearest appropriate stroke center. Pre-notify the receiving facility for stroke team activation.",protocol_ref:"02.12"},
+   {text:"Nearest emergency department for CT scan, then transfer to stroke center if confirmed",correct:false,explanation:"Direct transport to a stroke center avoids delays from interfacility transfers. Time lost is brain lost.",protocol_ref:"02.12"},
+   {text:"Comprehensive stroke center even if farther, since she is on Warfarin and may need reversal",correct:false,explanation:"Transport to the nearest appropriate stroke center. Warfarin reversal can be initiated at primary stroke centers as well.",protocol_ref:"02.12"},
+   {text:"Closest facility since the 4.5-hour tPA window gives plenty of time for transfer",correct:false,explanation:"Every minute counts in stroke. Direct transport to a stroke center eliminates transfer delays and improves outcomes.",protocol_ref:"02.12"}
   ]}
 ]},
 
@@ -177,24 +177,24 @@ primary_protocol:"02.04A",related_protocols:["01.01","02.20A"],level_min:"E",
 questions:[
  {phase:"assessment",prompt:"What severity classification does this patient meet?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Severe — respiratory distress with wheezing AND hypotension with poor perfusion",correct:true,explanation:"Per Protocol 02.04A: Severe = skin symptoms + respiratory (wheezing, dyspnea, hypoxia) OR GI symptoms WITH hypotension and poor perfusion.",protocol_ref:"02.04A"},
-   {text:"Mild — just hives and itching",correct:false,explanation:"This patient has wheezing, hypotension, and angioedema — far beyond mild.",protocol_ref:"02.04A"},
-   {text:"Moderate — respiratory symptoms with normal BP",correct:false,explanation:"BP is 88/54 — this patient is hypotensive, making this severe.",protocol_ref:"02.04A"},
-   {text:"Not anaphylaxis — just an allergic reaction",correct:false,explanation:"Multi-system involvement (skin + respiratory + cardiovascular) defines anaphylaxis.",protocol_ref:"02.04A"}
+   {text:"Severe anaphylaxis with multi-system involvement including cardiovascular compromise",correct:true,explanation:"Per Protocol 02.04A: Severe = skin symptoms + respiratory (wheezing, dyspnea, hypoxia) WITH hypotension and poor perfusion. This patient has skin, respiratory, AND cardiovascular involvement.",protocol_ref:"02.04A"},
+   {text:"Moderate allergic reaction with respiratory involvement but adequate perfusion",correct:false,explanation:"BP is 88/54 — this patient is hypotensive with cardiovascular compromise, not just respiratory involvement. This is severe, not moderate.",protocol_ref:"02.04A"},
+   {text:"Severe allergic reaction limited to skin and respiratory systems only",correct:false,explanation:"This patient also has cardiovascular compromise (BP 88/54, HR 118). All three systems are involved, making this anaphylaxis with shock.",protocol_ref:"02.04A"},
+   {text:"Mild anaphylaxis since the patient is still conscious and alert with a GCS of 15",correct:false,explanation:"Severity is determined by system involvement and hemodynamic status, not mental status alone. Hypotension and wheezing make this severe.",protocol_ref:"02.04A"}
   ]},
  {phase:"treatment",prompt:"What is your immediate intervention?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Epinephrine 0.3mg IM (auto-injector or check and inject) immediately",correct:true,explanation:"Per Protocol 02.04A: For severe allergic reaction/anaphylaxis, epinephrine is the first-line treatment. 0.3mg IM via auto-injector preferred.",protocol_ref:"02.04A"},
-   {text:"Diphenhydramine (Benadryl) first, then consider epinephrine",correct:false,explanation:"Epinephrine is FIRST-LINE for anaphylaxis. Antihistamines are secondary and do not treat the cardiovascular collapse.",protocol_ref:"02.04A"},
-   {text:"Albuterol nebulizer for the wheezing",correct:false,explanation:"While albuterol may help wheezing, epinephrine is the priority in anaphylaxis.",protocol_ref:"02.04A"},
-   {text:"Assist with patient's own EpiPen only if she can self-administer",correct:false,explanation:"EMTs can administer epinephrine via auto-injector per protocol. Don't wait for self-administration.",protocol_ref:"02.04A"}
+   {text:"Epinephrine 0.3mg IM via auto-injector, then reassess and support ABCs",correct:true,explanation:"Per Protocol 02.04A: For severe allergic reaction/anaphylaxis, epinephrine is the first-line treatment. 0.3mg IM via auto-injector preferred.",protocol_ref:"02.04A"},
+   {text:"Diphenhydramine 50mg IM and albuterol nebulizer to address the histamine response",correct:false,explanation:"Epinephrine is FIRST-LINE for anaphylaxis. Antihistamines are secondary adjuncts and do not treat bronchospasm or cardiovascular collapse.",protocol_ref:"02.04A"},
+   {text:"Assist with the patient's own EpiPen and start albuterol nebulizer simultaneously",correct:false,explanation:"Do not wait for the patient to self-administer. EMTs should administer epinephrine immediately. The patient's EpiPen can be used but EMS should take the lead.",protocol_ref:"02.04A"},
+   {text:"IV normal saline bolus 20mL/kg for the hypotension, then epinephrine if BP doesn't improve",correct:false,explanation:"Epinephrine is the first-line treatment and should not be delayed for fluid resuscitation. Epinephrine addresses the underlying pathophysiology.",protocol_ref:"02.04A"}
   ]},
  {phase:"transport",prompt:"The patient's symptoms improve after epinephrine. What is your transport decision?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Transport to hospital — anaphylaxis can have a biphasic reaction requiring monitoring",correct:true,explanation:"All anaphylaxis patients require hospital evaluation and monitoring for biphasic reaction, even if symptoms improve.",protocol_ref:"02.04A"},
-   {text:"Patient can refuse transport since symptoms improved",correct:false,explanation:"Strongly encourage transport. Biphasic reactions can occur hours later and be life-threatening.",protocol_ref:"02.04A"},
-   {text:"Release to family with instructions to take Benadryl",correct:false,explanation:"Anaphylaxis requires emergency department evaluation regardless of field improvement.",protocol_ref:"02.04A"},
-   {text:"Wait on scene 30 minutes to see if symptoms return",correct:false,explanation:"Transport should not be delayed. Monitor en route.",protocol_ref:"02.04A"}
+   {text:"Transport to hospital for monitoring given the risk of biphasic anaphylactic reaction",correct:true,explanation:"All anaphylaxis patients require hospital evaluation and monitoring for biphasic reaction (can occur 1-72 hours later), even if symptoms improve.",protocol_ref:"02.04A"},
+   {text:"Monitor on scene for 20 minutes, then transport only if symptoms return",correct:false,explanation:"Biphasic reactions can occur hours later. Transport should not be delayed for on-scene monitoring. Monitor en route.",protocol_ref:"02.04A"},
+   {text:"Transport is optional since epinephrine resolved the reaction completely",correct:false,explanation:"Even with complete symptom resolution, biphasic reactions can be life-threatening. All anaphylaxis patients need ED evaluation.",protocol_ref:"02.04A"},
+   {text:"Administer a second dose of epinephrine prophylactically and then allow patient to refuse",correct:false,explanation:"A second dose is only given if symptoms recur. Prophylactic dosing is not indicated. All anaphylaxis patients should be strongly encouraged to go to the ED.",protocol_ref:"02.04A"}
   ]}
 ]},
 
@@ -209,17 +209,17 @@ primary_protocol:"02.19A",related_protocols:["01.01","05.01A"],level_min:"E",
 questions:[
  {phase:"scene",prompt:"Coworkers are holding the patient down. What is your first action?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Have coworkers stop restraining the patient, protect from injury, do not place anything in the mouth",correct:true,explanation:"Per Protocol 02.19A: Do not restrain. Protect from injury. Never place anything in the patient's mouth during a seizure.",protocol_ref:"02.19A"},
-   {text:"Help the coworkers hold him more firmly to prevent injury",correct:false,explanation:"Restraining a seizing patient can cause injury. Protect but do not restrain.",protocol_ref:"02.19A"},
-   {text:"Place a bite block between the teeth",correct:false,explanation:"Never place anything in the mouth of a seizing patient.",protocol_ref:"02.19A"},
-   {text:"Immediately attempt to start an IV",correct:false,explanation:"IV access during active tonic-clonic seizure is not practical or priority. Protect the patient first.",protocol_ref:"02.19A"}
+   {text:"Direct bystanders to release the patient, clear hazards, and protect from injury without restraint",correct:true,explanation:"Per Protocol 02.19A: Do not restrain. Protect from injury by clearing the area. Never place anything in the patient's mouth during a seizure.",protocol_ref:"02.19A"},
+   {text:"Assist bystanders in firmly holding the patient's extremities to prevent musculoskeletal injury",correct:false,explanation:"Restraining a seizing patient can cause fractures, dislocations, and soft tissue injury. Protect by clearing the environment, not by holding down.",protocol_ref:"02.19A"},
+   {text:"Insert a nasal airway and position the patient on their side while bystanders stabilize the head",correct:false,explanation:"During active tonic-clonic seizure, do not attempt to insert anything. The priority is to stop restraint, clear hazards, and protect from injury.",protocol_ref:"02.19A"},
+   {text:"Immediately suction the airway and apply high-flow oxygen via NRB while bystanders maintain position",correct:false,explanation:"During active seizure, suctioning and NRB placement are not practical. First priority is stopping the restraint and protecting from injury.",protocol_ref:"02.19A"}
   ]},
  {phase:"treatment",prompt:"The seizure continues for 5+ minutes. What medication intervention is indicated?",multi_select:false,level_filter:"CP",
   options:[
-   {text:"Midazolam 5mg IM/IN for status epilepticus",correct:true,explanation:"Per Protocol 02.19A: For prolonged seizure activity, midazolam is the first-line benzodiazepine. IM or IN routes preferred when IV not available.",protocol_ref:"02.19A"},
-   {text:"Diazepam 10mg orally",correct:false,explanation:"Oral medication is not appropriate during active seizure — aspiration risk.",protocol_ref:"02.19A"},
-   {text:"Phenytoin IV push",correct:false,explanation:"Phenytoin is not a prehospital medication in RI protocols.",protocol_ref:"02.19A"},
-   {text:"No medication — seizures always stop on their own",correct:false,explanation:"Status epilepticus (>5 min) is life-threatening and requires benzodiazepine intervention.",protocol_ref:"02.19A"}
+   {text:"Midazolam 5mg IM or IN as first-line benzodiazepine for status epilepticus",correct:true,explanation:"Per Protocol 02.19A: For prolonged seizure activity (>5 min), midazolam is the first-line benzodiazepine. IM or IN routes preferred when IV not available.",protocol_ref:"02.19A"},
+   {text:"Diazepam 5mg IV push, or 10mg rectal if no IV access is available",correct:false,explanation:"While diazepam is a benzodiazepine, midazolam IM/IN is the preferred first-line agent per RI protocol due to faster onset via non-IV routes.",protocol_ref:"02.19A"},
+   {text:"Lorazepam 2mg slow IV push over 2 minutes with cardiac monitoring",correct:false,explanation:"Midazolam IM/IN is the preferred first-line agent per RI protocol. Lorazepam requires IV access which may be difficult during active seizure.",protocol_ref:"02.19A"},
+   {text:"Levetiracetam 1000mg IV since the patient is already prescribed Keppra as maintenance therapy",correct:false,explanation:"Levetiracetam is not a prehospital medication in RI protocols. Benzodiazepines (midazolam) are the first-line prehospital treatment for status epilepticus.",protocol_ref:"02.19A"}
   ]}
 ]},
 
@@ -234,17 +234,17 @@ primary_protocol:"02.08A",related_protocols:["01.01","05.01A"],level_min:"E",
 questions:[
  {phase:"treatment",prompt:"The patient has already used her inhaler twice. What is your treatment?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Albuterol 2.5mg via nebulizer with ipratropium bromide 500mcg, supplemental oxygen",correct:true,explanation:"Per Protocol 02.08A: Albuterol via nebulizer with ipratropium bromide for severe respiratory distress. Additional treatments may be repeated.",protocol_ref:"02.08A"},
-   {text:"No more bronchodilators since she already used her inhaler",correct:false,explanation:"EMS-administered nebulized albuterol is indicated even if the patient has used their own inhaler.",protocol_ref:"02.08A"},
-   {text:"Oxygen only by nasal cannula",correct:false,explanation:"While oxygen is needed, bronchodilator therapy is the primary treatment for bronchospasm.",protocol_ref:"02.08A"},
-   {text:"Encourage slow breathing techniques only",correct:false,explanation:"Severe bronchospasm requires pharmacological intervention, not just coaching.",protocol_ref:"02.08A"}
+   {text:"Albuterol 2.5mg via nebulizer with ipratropium bromide 500mcg and supplemental oxygen",correct:true,explanation:"Per Protocol 02.08A: Albuterol via nebulizer with ipratropium bromide for severe respiratory distress. Nebulized delivery is more effective than MDI in severe cases.",protocol_ref:"02.08A"},
+   {text:"Assist with two additional puffs of her prescribed albuterol MDI via spacer with oxygen by NC",correct:false,explanation:"EMS-administered nebulized albuterol provides better drug delivery in severe distress. Also, ipratropium should be added per protocol for severe cases.",protocol_ref:"02.08A"},
+   {text:"Albuterol 2.5mg via nebulizer only, and reserve ipratropium for ALS if she doesn't improve",correct:false,explanation:"Per protocol, ipratropium bromide should be combined with albuterol for severe respiratory distress, not withheld as a second-line agent.",protocol_ref:"02.08A"},
+   {text:"High-flow oxygen via NRB at 15 LPM and coach pursed-lip breathing during rapid transport",correct:false,explanation:"While oxygen is indicated, bronchodilator therapy is the primary treatment for bronchospasm and should not be withheld in favor of oxygen alone.",protocol_ref:"02.08A"}
   ]},
  {phase:"treatment",prompt:"Despite nebulizer treatment, the patient is worsening with SpO2 of 85%. What do you consider?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Epinephrine 0.3mg IM and initiate CPAP if available",correct:true,explanation:"Per Protocol 02.08A: Epinephrine IM for severe bronchospasm not responding to nebulized albuterol. CPAP/BiPAP if available and not contraindicated.",protocol_ref:"02.08A"},
-   {text:"Continue the same nebulizer treatment and wait",correct:false,explanation:"Worsening despite treatment requires escalation, not repetition of the same intervention.",protocol_ref:"02.08A"},
-   {text:"Intubate immediately",correct:false,explanation:"Intubation is a last resort in asthma. Epinephrine and CPAP should be tried first.",protocol_ref:"02.08A"},
-   {text:"Nothing more can be done in the field",correct:false,explanation:"Epinephrine IM is available at EMT level and is indicated for severe refractory bronchospasm.",protocol_ref:"02.08A"}
+   {text:"Epinephrine 0.3mg IM and initiate CPAP if available at 5-10 cmH2O",correct:true,explanation:"Per Protocol 02.08A: Epinephrine IM for severe bronchospasm not responding to nebulized albuterol. CPAP/BiPAP if available and not contraindicated.",protocol_ref:"02.08A"},
+   {text:"Repeat albuterol 2.5mg and ipratropium 500mcg via nebulizer and reassess in 10 minutes",correct:false,explanation:"Worsening despite initial nebulizer requires escalation to epinephrine, not just repeating the same treatment that failed.",protocol_ref:"02.08A"},
+   {text:"Prepare for endotracheal intubation with RSI medications and BVM ventilation",correct:false,explanation:"Intubation is a last resort in severe asthma. Epinephrine and CPAP should be attempted first before invasive airway management.",protocol_ref:"02.08A"},
+   {text:"Magnesium sulfate 2g IV over 20 minutes as a bronchodilator adjunct with continued nebulizer",correct:false,explanation:"While magnesium may be used in some protocols, epinephrine IM is the next escalation step per RI protocol for refractory bronchospasm.",protocol_ref:"02.08A"}
   ]}
 ]},
 
@@ -260,24 +260,24 @@ primary_protocol:"03.03A",related_protocols:["01.01"],level_min:"E",
 questions:[
  {phase:"treatment",prompt:"Bystander CPR is in progress. What is your immediate priority?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Apply AED/defibrillator immediately with minimal interruption to chest compressions",correct:true,explanation:"Per Protocol 03.03A: A defibrillator should be applied as soon as available and ECG rhythm analysis should immediately follow. Minimize interruptions in compressions.",protocol_ref:"03.03A"},
-   {text:"Stop CPR to get a full history first",correct:false,explanation:"Never delay defibrillation for history. Apply the defibrillator immediately.",protocol_ref:"03.03A"},
-   {text:"Start IV access before anything else",correct:false,explanation:"Defibrillation takes priority over IV access in cardiac arrest.",protocol_ref:"03.03A"},
-   {text:"Intubate before applying the AED",correct:false,explanation:"Defibrillation and high-quality CPR take priority. Airway management is secondary.",protocol_ref:"03.03A"}
+   {text:"Apply AED pads and analyze rhythm immediately while minimizing interruption to compressions",correct:true,explanation:"Per Protocol 03.03A: A defibrillator should be applied as soon as available and ECG rhythm analysis should immediately follow. Minimize interruptions in compressions.",protocol_ref:"03.03A"},
+   {text:"Take over CPR from bystander first, then establish IV access before applying the AED",correct:false,explanation:"The AED/defibrillator should be applied immediately. IV access is important but defibrillation takes priority in witnessed VF arrest.",protocol_ref:"03.03A"},
+   {text:"Insert an OPA and begin BVM ventilations before applying the AED to address hypoxia",correct:false,explanation:"In a witnessed adult arrest, early defibrillation takes priority over advanced airway management. Apply the AED first.",protocol_ref:"03.03A"},
+   {text:"Confirm pulselessness with a 10-second pulse check and assess rhythm on the monitor first",correct:false,explanation:"Bystander CPR is already in progress confirming pulselessness. Apply the AED immediately — do not delay for additional assessment.",protocol_ref:"03.03A"}
   ]},
  {phase:"treatment",prompt:"The AED analyzes ventricular fibrillation. What do you do?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Deliver shock immediately, then resume CPR for 2 minutes before reanalyzing",correct:true,explanation:"Per Protocol 03.03A and AHA guidelines: Deliver shock, immediately resume CPR for 2 minutes, then reanalyze. Minimize interruptions.",protocol_ref:"03.03A"},
-   {text:"Deliver 3 stacked shocks before resuming CPR",correct:false,explanation:"Current guidelines call for single shock followed by immediate CPR, not stacked shocks.",protocol_ref:"03.03A"},
-   {text:"Wait for ALS before shocking",correct:false,explanation:"Early defibrillation is critical for VF survival. Do not delay for ALS.",protocol_ref:"03.03A"},
-   {text:"Perform 2 more minutes of CPR before the first shock",correct:false,explanation:"For witnessed VF arrest, immediate defibrillation is recommended.",protocol_ref:"03.03A"}
+   {text:"Deliver one shock, immediately resume CPR for 2 minutes, then reanalyze the rhythm",correct:true,explanation:"Per Protocol 03.03A and AHA guidelines: Deliver single shock, immediately resume CPR for 2 minutes, then reanalyze. Minimize interruptions.",protocol_ref:"03.03A"},
+   {text:"Deliver three rapid stacked shocks, then check pulse and resume CPR if no ROSC",correct:false,explanation:"Stacked shocks are no longer recommended. Current guidelines call for single shock followed by immediate 2-minute CPR cycle.",protocol_ref:"03.03A"},
+   {text:"Deliver one shock, then immediately check for a pulse before resuming compressions",correct:false,explanation:"Do not pause for a pulse check after the shock. Resume CPR immediately for 2 full minutes before reassessing rhythm.",protocol_ref:"03.03A"},
+   {text:"Perform 2 minutes of CPR first to circulate oxygenated blood, then deliver the shock",correct:false,explanation:"For witnessed VF arrest with bystander CPR already in progress, immediate defibrillation is recommended without delay.",protocol_ref:"03.03A"}
   ]},
  {phase:"treatment",prompt:"After 2 rounds of CPR and defibrillation, what additional interventions should be performed?",multi_select:false,level_filter:"CP",
   options:[
-   {text:"Establish IV/IO access, administer epinephrine 1mg IV/IO, consider advanced airway",correct:true,explanation:"Per Protocol 03.03A: After initial CPR and defibrillation, establish vascular access and administer epinephrine. Consider advanced airway without interrupting compressions.",protocol_ref:"03.03A"},
-   {text:"Continue CPR and defibrillation only — no medications needed",correct:false,explanation:"Epinephrine is indicated in cardiac arrest per protocol.",protocol_ref:"03.03A"},
-   {text:"Administer amiodarone before epinephrine",correct:false,explanation:"Epinephrine is given first. Amiodarone is considered for refractory VF/VT.",protocol_ref:"03.03A"},
-   {text:"Stop resuscitation after 2 unsuccessful shocks",correct:false,explanation:"Continue resuscitation efforts. Two rounds is far too early to consider termination.",protocol_ref:"03.03A"}
+   {text:"Establish IV/IO access, administer epinephrine 1mg, and consider advanced airway placement",correct:true,explanation:"Per Protocol 03.03A: After initial CPR and defibrillation, establish vascular access and administer epinephrine. Consider advanced airway without interrupting compressions.",protocol_ref:"03.03A"},
+   {text:"Administer amiodarone 300mg IV/IO first as the antiarrhythmic for refractory VF",correct:false,explanation:"Epinephrine is administered first. Amiodarone is considered for VF/pVT refractory to defibrillation AND epinephrine.",protocol_ref:"03.03A"},
+   {text:"Establish IV access and administer sodium bicarbonate 1mEq/kg to correct metabolic acidosis",correct:false,explanation:"Sodium bicarbonate is not routinely given in cardiac arrest. Epinephrine is the first-line vasopressor per protocol.",protocol_ref:"03.03A"},
+   {text:"Place an advanced airway first to ensure adequate oxygenation before any medications",correct:false,explanation:"Vascular access and epinephrine take priority. Advanced airway is considered but should not delay medication administration or interrupt compressions.",protocol_ref:"03.03A"}
   ]}
 ]},
 
@@ -292,17 +292,17 @@ primary_protocol:"03.05A",related_protocols:["01.01"],level_min:"E",
 questions:[
  {phase:"assessment",prompt:"What makes this bradycardia symptomatic and requiring treatment?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Heart rate of 36 with hypotension, altered mental status, and poor perfusion (diaphoresis, pallor)",correct:true,explanation:"Symptomatic bradycardia = slow rate PLUS hemodynamic compromise: hypotension, altered mental status, signs of poor perfusion.",protocol_ref:"03.05A"},
-   {text:"Heart rate below 60 always requires treatment",correct:false,explanation:"Bradycardia alone doesn't require treatment. It must be symptomatic with hemodynamic compromise.",protocol_ref:"03.05A"},
-   {text:"Only the low blood pressure matters, not the heart rate",correct:false,explanation:"The bradycardia is CAUSING the symptoms. Both the rate and the hemodynamic effects matter.",protocol_ref:"03.05A"},
-   {text:"This is normal for a 78-year-old",correct:false,explanation:"A heart rate of 36 with hypotension and altered mental status is not normal at any age.",protocol_ref:"03.05A"}
+   {text:"The rate of 36 is causing hypotension, altered mental status, and signs of poor perfusion",correct:true,explanation:"Symptomatic bradycardia = slow rate PLUS hemodynamic compromise: hypotension, altered mental status, signs of poor perfusion (diaphoresis, pallor).",protocol_ref:"03.05A"},
+   {text:"The heart rate is below 60 bpm which meets the threshold for treatment regardless of symptoms",correct:false,explanation:"Bradycardia alone doesn't require treatment. It must be symptomatic with hemodynamic compromise to warrant intervention.",protocol_ref:"03.05A"},
+   {text:"The hypotension and altered mental status are the concern but are likely from sepsis, not the rate",correct:false,explanation:"The bradycardia is the most likely cause of the hemodynamic compromise. The rate of 36 is insufficient to maintain adequate cardiac output.",protocol_ref:"03.05A"},
+   {text:"The metoprolol overdose is causing beta-blocker toxicity requiring specific antidote therapy",correct:false,explanation:"While metoprolol can contribute to bradycardia, there is no evidence of overdose. The clinical picture is symptomatic bradycardia requiring standard treatment per protocol.",protocol_ref:"03.05A"}
   ]},
  {phase:"treatment",prompt:"What is the paramedic treatment for this patient?",multi_select:false,level_filter:"P",
   options:[
-   {text:"Atropine 0.5mg IV, may repeat; prepare for transcutaneous pacing if atropine ineffective",correct:true,explanation:"Per Protocol 03.05A: Atropine is first-line for symptomatic bradycardia. Transcutaneous pacing is indicated if atropine is ineffective.",protocol_ref:"03.05A"},
-   {text:"Epinephrine 1mg IV push",correct:false,explanation:"Cardiac arrest dose epinephrine is not indicated. Atropine is first-line for symptomatic bradycardia.",protocol_ref:"03.05A"},
-   {text:"Adenosine 6mg rapid IV push",correct:false,explanation:"Adenosine slows the heart — contraindicated in bradycardia. It's used for tachycardia.",protocol_ref:"03.05A"},
-   {text:"Cardioversion at 100J",correct:false,explanation:"Cardioversion is for tachycardia. Bradycardia is treated with atropine and pacing.",protocol_ref:"03.05A"}
+   {text:"Atropine 0.5mg IV, may repeat every 3-5 minutes; prepare for transcutaneous pacing if ineffective",correct:true,explanation:"Per Protocol 03.05A: Atropine is first-line for symptomatic bradycardia. Transcutaneous pacing is indicated if atropine is ineffective.",protocol_ref:"03.05A"},
+   {text:"Initiate transcutaneous pacing at 60 bpm immediately as first-line treatment for this rate",correct:false,explanation:"Atropine is the first-line treatment for symptomatic bradycardia. Pacing is reserved for cases refractory to atropine.",protocol_ref:"03.05A"},
+   {text:"Epinephrine 0.1mg IV push (1:10,000) titrated to heart rate response every 2 minutes",correct:false,explanation:"Atropine is the first-line agent. Low-dose epinephrine infusion may be considered but is not the initial treatment per protocol.",protocol_ref:"03.05A"},
+   {text:"Dopamine infusion at 5mcg/kg/min to increase heart rate and blood pressure simultaneously",correct:false,explanation:"Dopamine infusion may be considered for refractory cases, but atropine is the first-line treatment per protocol for symptomatic bradycardia.",protocol_ref:"03.05A"}
   ]}
 ]},
 
@@ -318,24 +318,24 @@ primary_protocol:"04.01A",related_protocols:["04.03","04.04","04.05","02.21A"],l
 questions:[
  {phase:"scene",prompt:"What are your scene management priorities?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Scene safety, request fire/rescue for extrication, spinal precautions, rapid trauma assessment",correct:true,explanation:"Per Protocol 04.01A: Scene safety first, request extrication resources, apply spinal precautions per protocol, perform rapid trauma assessment.",protocol_ref:"04.01A"},
-   {text:"Immediately begin extrication yourself",correct:false,explanation:"Extrication requires specialized equipment and trained rescue personnel.",protocol_ref:"04.01A"},
-   {text:"Wait for the patient to free himself",correct:false,explanation:"The patient is trapped and requires rescue extrication.",protocol_ref:"04.01A"},
-   {text:"Focus only on the femur fracture",correct:false,explanation:"Multi-trauma requires a systematic approach, not tunnel vision on one injury.",protocol_ref:"04.01A"}
+   {text:"Ensure scene safety, request fire/rescue for extrication, initiate spinal precautions and rapid trauma assessment",correct:true,explanation:"Per Protocol 04.01A: Scene safety first, request extrication resources, apply spinal precautions per protocol, perform rapid trauma assessment.",protocol_ref:"04.01A"},
+   {text:"Begin patient assessment through the vehicle window, start IV access, and request ALS intercept",correct:false,explanation:"While assessment can begin through the window, the priority is scene safety and requesting extrication resources. IV access can wait until the patient is accessible.",protocol_ref:"04.01A"},
+   {text:"Stabilize the vehicle, assist fire with manual extrication, and apply a cervical collar immediately",correct:false,explanation:"EMS should not perform extrication — that requires specialized equipment and trained rescue personnel. Focus on scene safety and patient assessment.",protocol_ref:"04.01A"},
+   {text:"Perform a focused assessment of the femur deformity and apply a traction splint while entrapped",correct:false,explanation:"Multi-trauma requires a systematic approach. Scene safety and extrication resources are the priority, not focused treatment of a single injury while entrapped.",protocol_ref:"04.01A"}
   ]},
  {phase:"treatment",prompt:"The patient is extricated. He's tachycardic at 128 and hypotensive at 86/58 with a deformed left femur. What do you prioritize?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Control hemorrhage, apply traction splint to femur, IV fluid resuscitation, rapid transport to trauma center",correct:true,explanation:"Per Protocols 04.01A/02.21A: Hemorrhage control is priority. Traction splint for femur fracture. IV fluids for hemorrhagic shock. Transport to Level 1 Trauma Center.",protocol_ref:"04.01A"},
-   {text:"Splint all extremities before transport",correct:false,explanation:"In critical trauma with signs of shock, rapid transport takes priority. Splint the femur but don't delay for minor injuries.",protocol_ref:"04.01A"},
-   {text:"Full spinal immobilization and detailed secondary survey on scene",correct:false,explanation:"Critical trauma patients get a rapid assessment and rapid transport. Detailed survey is done en route.",protocol_ref:"04.01A"},
-   {text:"Wait for vital signs to stabilize before transport",correct:false,explanation:"This patient is in hemorrhagic shock. He needs a trauma center, not prolonged scene time.",protocol_ref:"04.01A"}
+   {text:"Hemorrhage control, traction splint to the femur, IV fluid resuscitation, and rapid transport",correct:true,explanation:"Per Protocols 04.01A/02.21A: Hemorrhage control is priority. Traction splint for femur fracture (controls internal bleeding). IV fluids for hemorrhagic shock. Rapid transport to trauma center.",protocol_ref:"04.01A"},
+   {text:"Full spinal immobilization on a long board, complete secondary survey, then splint all injuries",correct:false,explanation:"Critical trauma patients with signs of shock get a rapid assessment and rapid transport. Detailed secondary survey is performed en route, not on scene.",protocol_ref:"04.01A"},
+   {text:"Two large-bore IVs with aggressive fluid resuscitation to normalize BP before moving the patient",correct:false,explanation:"While IV access is important, do not delay transport to normalize vital signs. Hemorrhagic shock requires surgical intervention at a trauma center.",protocol_ref:"04.01A"},
+   {text:"Pain management with fentanyl IV, then splint the femur and perform a thorough head-to-toe exam",correct:false,explanation:"Pain management should not delay hemorrhage control and rapid transport. The priority is addressing life threats and getting to a trauma center.",protocol_ref:"04.01A"}
   ]},
  {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Level 1 Trauma Center — high-energy mechanism with signs of hemorrhagic shock and multi-system trauma",correct:true,explanation:"Per Protocol 04.01A: Multi-trauma with hemodynamic instability meets trauma center criteria. Transport to highest level trauma center.",protocol_ref:"04.01A"},
-   {text:"Nearest community hospital to stabilize, then transfer",correct:false,explanation:"Direct transport to trauma center is preferred when accessible. Avoid unnecessary delays.",protocol_ref:"04.01A"},
-   {text:"Orthopedic specialty hospital for the femur",correct:false,explanation:"Multi-system trauma requires a trauma center, not a specialty hospital.",protocol_ref:"04.01A"},
-   {text:"Closest facility to start blood transfusion",correct:false,explanation:"Trauma center should be the destination for definitive care.",protocol_ref:"04.01A"}
+   {text:"Highest level trauma center accessible within an appropriate transport time",correct:true,explanation:"Per Protocol 04.01A: Multi-trauma with hemodynamic instability meets trauma center criteria. Transport to highest level trauma center available.",protocol_ref:"04.01A"},
+   {text:"Nearest emergency department for initial stabilization and IV blood products, then arrange transfer",correct:false,explanation:"Direct transport to a trauma center is preferred. Stopping at a non-trauma hospital delays definitive surgical care.",protocol_ref:"04.01A"},
+   {text:"Nearest Level 3 trauma center since it can handle the femur fracture and fluid resuscitation",correct:false,explanation:"This multi-system trauma patient with hemorrhagic shock needs the highest level of trauma care available, not just orthopedic capability.",protocol_ref:"04.01A"},
+   {text:"Closest hospital by ground, then request helicopter transfer to the trauma center",correct:false,explanation:"Direct ground transport to a trauma center is preferred over a two-step process that delays definitive care.",protocol_ref:"04.01A"}
   ]}
 ]},
 
@@ -350,17 +350,17 @@ primary_protocol:"04.07A",related_protocols:["01.01","02.07A"],level_min:"E",
 questions:[
  {phase:"treatment",prompt:"What is your burn management for this patient?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Remove clothing/jewelry from burn areas, cover with dry sterile dressings, manage pain, IV fluid resuscitation",correct:true,explanation:"Per Protocol 04.07A: Remove clothing and jewelry, cover with dry sterile dressings, pain management, IV fluids for burns >15% BSA.",protocol_ref:"04.07A"},
-   {text:"Apply ice directly to the burns",correct:false,explanation:"Ice can worsen burn injury and cause hypothermia. Cool running water is acceptable for small burns; cover with dry dressings.",protocol_ref:"04.07A"},
-   {text:"Apply burn cream/ointment in the field",correct:false,explanation:"Do not apply ointments or creams. Cover with dry sterile dressings.",protocol_ref:"04.07A"},
-   {text:"Pop any blisters to prevent infection",correct:false,explanation:"Do not break blisters. Cover with dry sterile dressings.",protocol_ref:"04.07A"}
+   {text:"Remove clothing and jewelry, apply dry sterile dressings, manage pain, and initiate IV fluid resuscitation",correct:true,explanation:"Per Protocol 04.07A: Remove clothing and jewelry, cover with dry sterile dressings, pain management, IV fluids for burns >15% BSA.",protocol_ref:"04.07A"},
+   {text:"Apply cool wet dressings soaked in sterile saline to all burned areas and wrap with cling film",correct:false,explanation:"Wet dressings on large burns (18% BSA) promote hypothermia. Dry sterile dressings are indicated for burns of this size.",protocol_ref:"04.07A"},
+   {text:"Apply topical silver sulfadiazine cream to partial-thickness areas, then cover with sterile gauze",correct:false,explanation:"Do not apply ointments or creams in the prehospital setting. Cover with dry sterile dressings only.",protocol_ref:"04.07A"},
+   {text:"Irrigate burn areas with cool running water for 20 minutes, then cover with moist sterile dressings",correct:false,explanation:"Prolonged irrigation of large BSA burns risks hypothermia. For burns >15% BSA, use dry sterile dressings and prioritize fluid resuscitation and transport.",protocol_ref:"04.07A"}
   ]},
  {phase:"transport",prompt:"This patient has 18% BSA burns with circumferential forearm burns. Where should she be transported?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Burn center — meets burn center referral criteria with >10% BSA and circumferential extremity burns",correct:true,explanation:"Per Protocol 04.07A: Burns >10% BSA and circumferential burns meet burn center referral criteria.",protocol_ref:"04.07A"},
-   {text:"Any emergency department",correct:false,explanation:"This patient meets burn center criteria due to BSA and circumferential burns.",protocol_ref:"04.07A"},
-   {text:"Urgent care clinic",correct:false,explanation:"18% BSA burns with circumferential involvement require burn center care.",protocol_ref:"04.07A"},
-   {text:"Patient can follow up with her own doctor",correct:false,explanation:"This is a significant burn requiring emergency and specialty care.",protocol_ref:"04.07A"}
+   {text:"Designated burn center, as this meets referral criteria for BSA percentage and circumferential burns",correct:true,explanation:"Per Protocol 04.07A: Burns >10% BSA and circumferential burns meet burn center referral criteria.",protocol_ref:"04.07A"},
+   {text:"Nearest emergency department for initial wound care and pain management, then arrange burn center transfer",correct:false,explanation:"Direct transport to a burn center is preferred when accessible, avoiding delays from interfacility transfer.",protocol_ref:"04.07A"},
+   {text:"Nearest trauma center since the burn percentage is below the 20% threshold for burn center referral",correct:false,explanation:"The threshold for burn center referral is >10% BSA, not 20%. Additionally, circumferential burns independently meet referral criteria.",protocol_ref:"04.07A"},
+   {text:"Nearest ED since there are no airway burns and the patient is hemodynamically stable",correct:false,explanation:"Burn center referral criteria include >10% BSA and circumferential extremity burns, regardless of airway involvement or hemodynamic status.",protocol_ref:"04.07A"}
   ]}
 ]},
 
@@ -376,17 +376,17 @@ primary_protocol:"02.08P",related_protocols:["01.01","05.01P"],level_min:"E",
 questions:[
  {phase:"assessment",prompt:"How do you classify this child's respiratory distress?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Severe — retractions, accessory muscle use, single-word speech, SpO2 88%, known asthmatic",correct:true,explanation:"Per Protocol 02.08P: Severe distress in children = poor air entry, extreme accessory muscle use, retractions, altered behavior, cyanosis and/or altered mental status.",protocol_ref:"02.08P"},
-   {text:"Mild — child is still conscious",correct:false,explanation:"Consciousness alone doesn't define severity. Retractions, accessory muscle use, and SpO2 of 88% indicate severe distress.",protocol_ref:"02.08P"},
-   {text:"Moderate — wheezing means air is still moving",correct:false,explanation:"The degree of retractions, accessory muscle use, and hypoxia indicate severe, not moderate distress.",protocol_ref:"02.08P"},
-   {text:"Cannot assess severity without a peak flow measurement",correct:false,explanation:"Clinical assessment is sufficient. Peak flow is not practical in a 3-year-old.",protocol_ref:"02.08P"}
+   {text:"Severe respiratory distress based on retractions, accessory muscle use, single-word speech, and SpO2 of 88%",correct:true,explanation:"Per Protocol 02.08P: Severe distress in children = poor air entry, extreme accessory muscle use, retractions, altered behavior, cyanosis and/or altered mental status.",protocol_ref:"02.08P"},
+   {text:"Moderate respiratory distress since the child is still conscious, alert, and has audible wheezing",correct:false,explanation:"Consciousness and audible wheezing do not define moderate. The degree of retractions, accessory muscle use, single-word speech, and SpO2 of 88% indicate severe distress.",protocol_ref:"02.08P"},
+   {text:"Mild respiratory distress with wheezing that should respond to a single nebulizer treatment",correct:false,explanation:"Intercostal/subcostal retractions, accessory muscle use, single-word speech, and SpO2 of 88% are far beyond mild classification.",protocol_ref:"02.08P"},
+   {text:"Impending respiratory failure requiring immediate advanced airway management and intubation",correct:false,explanation:"While this is severe, the child is still conscious with a GCS of 15 and has audible wheezing (moving air). Bronchodilator therapy should be attempted before considering advanced airway.",protocol_ref:"02.08P"}
   ]},
  {phase:"treatment",prompt:"What is your treatment for this child?",multi_select:false,level_filter:"EACP",
   options:[
-   {text:"Albuterol 2.5mg nebulizer with ipratropium 250mcg, high-flow oxygen, consider epinephrine if not improving",correct:true,explanation:"Per Protocol 02.08P: For severe pediatric respiratory distress, albuterol with ipratropium via nebulizer. Epinephrine IM if approaching respiratory failure.",protocol_ref:"02.08P"},
-   {text:"Blow-by oxygen only",correct:false,explanation:"This child needs bronchodilator therapy, not just oxygen.",protocol_ref:"02.08P"},
-   {text:"Adult dose albuterol (5mg) for faster relief",correct:false,explanation:"Use pediatric dosing: 2.5mg for age >2 years per protocol.",protocol_ref:"02.08P"},
-   {text:"Wait for the child to calm down — it's probably just anxiety",correct:false,explanation:"SpO2 of 88% with retractions is not anxiety. This child needs immediate treatment.",protocol_ref:"02.08P"}
+   {text:"Albuterol 2.5mg nebulizer with ipratropium 250mcg and high-flow supplemental oxygen",correct:true,explanation:"Per Protocol 02.08P: For severe pediatric respiratory distress, albuterol with ipratropium via nebulizer. Epinephrine IM if approaching respiratory failure.",protocol_ref:"02.08P"},
+   {text:"Albuterol 2.5mg via nebulizer alone with blow-by oxygen, adding ipratropium only if no improvement",correct:false,explanation:"Per protocol, ipratropium should be combined with albuterol for severe respiratory distress in pediatrics, not withheld as a second-line treatment.",protocol_ref:"02.08P"},
+   {text:"Albuterol 5mg via nebulizer with ipratropium 500mcg using the standard adult dosing for faster relief",correct:false,explanation:"Use pediatric dosing: albuterol 2.5mg and ipratropium 250mcg for children. Adult doses can cause significant tachycardia and tremor in a 3-year-old.",protocol_ref:"02.08P"},
+   {text:"Dexamethasone 0.6mg/kg PO and albuterol MDI 4 puffs via spacer with mask, reassess in 15 minutes",correct:false,explanation:"Severe distress with SpO2 of 88% requires nebulized bronchodilators for better drug delivery, not MDI. Steroids are not a first-line prehospital intervention.",protocol_ref:"02.08P"}
   ]}
 ]},
 
