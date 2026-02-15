@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e1a">
+<title>RI EMS Scenario Trainer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-y:scroll;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,SF Pro,Inter,system-ui,sans-serif;background:#0a0e1a;color:#fff;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  touch-action:pan-y;min-height:100dvh}
+.container{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
+.subtitle{text-align:center;color:#8b92a8;margin-bottom:24px;font-size:.95em}
+.card{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px;transition:all .2s;cursor:pointer;border:2px solid transparent}
+.card:active{transform:scale(.98)}
+.card.selected{border-color:#d9534f}
+.level-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.level-card{text-align:center;padding:20px 12px;font-weight:600;font-size:1.1em}
+.level-card .desc{font-size:.75em;font-weight:400;color:#8b92a8;margin-top:6px}
+.level-card[data-level="E"]{border-color:#f0ad4e;color:#f0ad4e}
+.level-card[data-level="E"].selected{background:rgba(240,173,78,.15);border-color:#f0ad4e}
+.level-card[data-level="A"]{border-color:#34c759;color:#34c759}
+.level-card[data-level="A"].selected{background:rgba(52,199,89,.15);border-color:#34c759}
+.level-card[data-level="C"]{border-color:#4a9eff;color:#4a9eff}
+.level-card[data-level="C"].selected{background:rgba(74,158,255,.15);border-color:#4a9eff}
+.level-card[data-level="P"]{border-color:#d9534f;color:#d9534f}
+.level-card[data-level="P"].selected{background:rgba(217,83,79,.15);border-color:#d9534f}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:#d9534f;color:#fff}
+.btn-primary:disabled{background:#333;color:#666;cursor:not-allowed}
+.btn-secondary{background:#1e2440;color:#fff;border:1px solid #2a3154}
+.btn-small{display:inline-block;width:auto;padding:8px 16px;font-size:.9em;margin:4px}
+.progress-bar{display:flex;gap:4px;margin-bottom:20px}
+.progress-step{flex:1;text-align:center;font-size:.7em;color:#8b92a8;padding-bottom:8px;border-bottom:3px solid #1e2440}
+.progress-step.active{color:#d9534f;border-color:#d9534f}
+.progress-step.done{color:#34c759;border-color:#34c759}
+.narrative{background:#141929;border-radius:12px;padding:16px;margin-bottom:16px;line-height:1.6;font-size:.95em}
+.narrative .label{color:#d9534f;font-weight:600;font-size:.8em;text-transform:uppercase;margin-bottom:6px}
+.vitals-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.vital{background:#0d1020;border-radius:8px;padding:8px;text-align:center}
+.vital .val{font-size:1.1em;font-weight:600}
+.vital .lbl{font-size:.7em;color:#8b92a8;margin-top:2px}
+.option{background:#141929;border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;border:2px solid #1e2440;transition:all .2s;line-height:1.4}
+.option:active{transform:scale(.98)}
+.option.selected{border-color:#4a9eff;background:rgba(74,158,255,.1)}
+.option.correct{border-color:#34c759;background:rgba(52,199,89,.15)}
+.option.incorrect{border-color:#d9534f;background:rgba(217,83,79,.15)}
+.option.missed{border-color:#f0ad4e;background:rgba(240,173,78,.1)}
+.option .indicator{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.option.correct .indicator{background:#34c759}
+.option.incorrect .indicator{background:#d9534f}
+.option.missed .indicator{background:#f0ad4e}
+.explanation{font-size:.85em;color:#8b92a8;margin-top:8px;padding:10px;background:#0d1020;border-radius:8px;line-height:1.5}
+.explanation .ref{color:#4a9eff;font-weight:500}
+.question-prompt{font-size:1em;font-weight:500;margin-bottom:12px;line-height:1.5}
+.multi-hint{font-size:.8em;color:#8b92a8;margin-bottom:8px}
+.score-circle{width:120px;height:120px;border-radius:50%;margin:20px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2em;font-weight:700}
+.score-good{background:rgba(52,199,89,.2);color:#34c759;border:3px solid #34c759}
+.score-ok{background:rgba(240,173,78,.2);color:#f0ad4e;border:3px solid #f0ad4e}
+.score-bad{background:rgba(217,83,79,.2);color:#d9534f;border:3px solid #d9534f}
+.score-circle .pct{font-size:.4em;font-weight:400}
+.review-item{background:#141929;border-radius:12px;padding:14px;margin-bottom:10px}
+.review-item .q{font-weight:500;margin-bottom:6px;font-size:.95em}
+.review-item .your-ans{font-size:.85em;margin-bottom:4px}
+.review-item .correct-ans{font-size:.85em;color:#34c759}
+.review-item .wrong{color:#d9534f}
+.tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:.7em;font-weight:600;margin-right:4px}
+.tag-easy{background:rgba(52,199,89,.2);color:#34c759}
+.tag-medium{background:rgba(240,173,78,.2);color:#f0ad4e}
+.tag-hard{background:rgba(217,83,79,.2);color:#d9534f}
+.tag-proto{background:rgba(74,158,255,.2);color:#4a9eff}
+.category-header{color:#8b92a8;font-size:.8em;font-weight:600;text-transform:uppercase;margin:16px 0 8px;letter-spacing:.5px}
+.scenario-item{display:flex;justify-content:space-between;align-items:center}
+.scenario-item .title{font-weight:500;font-size:.95em}
+.scenario-item .tags{margin-top:4px}
+.hidden{display:none!important}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.back-btn{background:none;border:none;color:#8b92a8;font-size:.9em;cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:4px}
+.back-btn:before{content:'←'}
+.phase-label{display:inline-block;background:rgba(217,83,79,.2);color:#d9534f;padding:4px 10px;border-radius:6px;font-size:.75em;font-weight:600;margin-bottom:12px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
+<script>
+'use strict';
+
+// ─── SCENARIOS ───
+const SCENARIOS = [
+// ── MEDICAL ──
+{
+  id:"med-acs-01",title:"Chest Pain at the Diner",category:"Medical",difficulty:"Medium",
+  dispatch:"Respond to a local diner for a 62-year-old male complaining of chest pain.",
+  patient:{age:62,sex:"M",cc:"Chest pain"},
+  scene:"You arrive at a busy diner. A 62-year-old male is seated in a booth, diaphoretic, clutching his chest. He appears pale and anxious. Bystanders report he suddenly grabbed his chest about 15 minutes ago while eating breakfast.",
+  vitals:{hr:98,bp:"158/94",rr:22,spo2:94,gcs:15,temp:"98.6°F",bg:"142 mg/dL"},
+  history:{pmh:"Hypertension, hyperlipidemia, Type 2 diabetes",meds:"Lisinopril, atorvastatin, metformin",allergies:"NKDA"},
+  presentation:"Patient is alert, diaphoretic, pale. Complains of substernal crushing chest pressure radiating to left arm and jaw. Onset 15 minutes ago. Pain rated 8/10. Mild dyspnea. Lung sounds clear bilaterally.",
+  primary_protocol:"03.02",related_protocols:["01.01","02.07A"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"Based on the dispatch information and scene size-up, what is your initial concern?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Possible acute coronary syndrome / cardiac event",correct:true,explanation:"A 62-year-old male with sudden onset chest pain, diaphoresis, and pallor should immediately raise concern for ACS/MI.",protocol_ref:"03.02"},
+       {text:"Gastroesophageal reflux from eating",correct:false,explanation:"While GI causes can mimic cardiac pain, the presentation (diaphoresis, pallor, radiation) makes ACS the priority concern.",protocol_ref:"03.02"},
+       {text:"Anxiety/panic attack",correct:false,explanation:"Panic attacks can cause chest pain, but in a 62-year-old male with cardiac risk factors, ACS must be ruled out first.",protocol_ref:"03.02"},
+       {text:"Musculoskeletal chest wall pain",correct:false,explanation:"MSK pain is typically reproducible with palpation and doesn't present with diaphoresis and pallor.",protocol_ref:"03.02"}
+     ]},
+    {phase:"assessment",prompt:"After obtaining vitals and history, what is your primary impression?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Acute coronary syndrome (ACS)",correct:true,explanation:"Substernal crushing pressure radiating to arm/jaw, diaphoresis, pallor in a 62 y/o male with cardiac risk factors (HTN, hyperlipidemia, diabetes) is classic ACS presentation.",protocol_ref:"03.02"},
+       {text:"Acute decompensated heart failure",correct:false,explanation:"Heart failure typically presents with crackles, JVD, and peripheral edema. Lungs are clear in this patient.",protocol_ref:"03.01"},
+       {text:"Aortic dissection",correct:false,explanation:"Dissection classically presents with sudden, severe tearing pain radiating to the back, not substernal pressure to arm/jaw.",protocol_ref:"03.02"},
+       {text:"Pulmonary embolism",correct:false,explanation:"PE typically presents with pleuritic chest pain, tachycardia, and hypoxia. This presentation is more consistent with ACS.",protocol_ref:"03.02"}
+     ]},
+    {phase:"treatment",prompt:"What are the appropriate initial EMT-level interventions? (Select all that apply)",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Aspirin 324 mg (4 × 81 mg) chewed",correct:true,explanation:"Per RI protocol, administer ASPIRIN 81 mg ×4 orally (chewed) unless allergic or unable to swallow safely.",protocol_ref:"03.02"},
+       {text:"Assist patient with their own prescribed nitroglycerin if SBP ≥ 100",correct:true,explanation:"EMTs may assist patients with their own prescribed nitroglycerin with SBP ≥ 100 mmHg, 0.3/0.4 mg SL, may repeat q5 min × 3 doses.",protocol_ref:"03.02"},
+       {text:"Oxygen to maintain SpO2 94-99%",correct:true,explanation:"Per Routine Patient Care, administer oxygen for chest pain with SpO2 < 94% to maintain 94-99%.",protocol_ref:"01.01"},
+       {text:"Administer morphine 4 mg IV for pain",correct:false,explanation:"IV morphine is not within EMT scope. Additionally, morphine is not part of the current RI ACS protocol.",protocol_ref:"03.02"},
+       {text:"Apply ice pack to chest",correct:false,explanation:"Ice packs are not indicated for cardiac chest pain.",protocol_ref:"03.02"}
+     ]},
+    {phase:"treatment",prompt:"What additional ALS interventions are indicated?",multi_select:true,level_filter:"ACP",
+     options:[
+       {text:"Acquire a multi-lead (≥12-lead) ECG",correct:true,explanation:"A multi-lead ECG should be acquired and transmitted to MEDICAL CONTROL at the nearest PCI capable facility for interpretation.",protocol_ref:"03.02"},
+       {text:"Establish IV access",correct:true,explanation:"ALS providers should establish IV access in unstable or potentially unstable patients.",protocol_ref:"01.01"},
+       {text:"Nitroglycerin 0.4 mg SL if SBP > 100 (AEMT-C/Paramedic)",correct:true,explanation:"AEMT-C and Paramedic can administer NTG 0.4 mg SL every 5 min if SBP > 100.",protocol_ref:"03.02"},
+       {text:"Administer amiodarone 150 mg IV",correct:false,explanation:"Amiodarone is indicated for ventricular tachycardia, not ACS without dysrhythmia.",protocol_ref:"03.07A"},
+       {text:"Pain management per Patient Comfort Protocol",correct:true,explanation:"Analgesia should be provided as indicated per the age appropriate Patient Comfort Protocol.",protocol_ref:"02.07A"}
+     ]},
+    {phase:"transport",prompt:"If the 12-lead ECG shows ST elevation in leads II, III, and aVF, where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest PCI-capable hospital (e.g., Rhode Island Hospital, Kent Hospital, Miriam Hospital)",correct:true,explanation:"STEMI patients should be transported to a Primary PCI capable hospital. In RI, these include RIH, Kent, Miriam, and Landmark.",protocol_ref:"03.02"},
+       {text:"Nearest community hospital regardless of PCI capability",correct:false,explanation:"STEMI patients benefit from direct transport to a PCI-capable facility for emergent catheterization.",protocol_ref:"03.02"},
+       {text:"Hasbro Children's Hospital",correct:false,explanation:"Hasbro is a pediatric facility. This is an adult patient.",protocol_ref:"01.01"},
+       {text:"BH Link facility",correct:false,explanation:"BH Link is for behavioral health emergencies, not cardiac events.",protocol_ref:"01.01"}
+     ]}
+  ]
+},
+{
+  id:"med-stroke-01",title:"Sudden Weakness at Home",category:"Medical",difficulty:"Hard",
+  dispatch:"Respond to a residence for a 71-year-old female with sudden right-sided weakness and slurred speech.",
+  patient:{age:71,sex:"F",cc:"Right-sided weakness, slurred speech"},
+  scene:"You arrive at a well-kept home. The patient's husband meets you at the door, visibly worried. He states his wife was watching TV when she suddenly couldn't move her right arm and her speech became garbled. Onset approximately 45 minutes ago.",
+  vitals:{hr:88,bp:"178/96",rr:18,spo2:97,gcs:13,temp:"98.4°F",bg:"118 mg/dL"},
+  history:{pmh:"Atrial fibrillation, hypertension",meds:"Apixaban, amlodipine, metoprolol",allergies:"Sulfa"},
+  presentation:"Patient is alert but confused. Right facial droop present. Right arm drifts and falls rapidly. Right grip strength absent. Speech is dysarthric. Left side has normal strength and sensation.",
+  primary_protocol:"02.12",related_protocols:["01.01","02.05A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"Calculate this patient's Los Angeles Motor Scale (LAMS) score based on the presentation.",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"LAMS score of 5 (Facial droop: 1, Arm drift falls rapidly: 2, No grip: 2)",correct:true,explanation:"Per RI Stroke protocol: Facial droop present = 1, Arm drift falls rapidly = 2, No grip strength = 2. Total LAMS = 5.",protocol_ref:"02.12"},
+       {text:"LAMS score of 3",correct:false,explanation:"This underestimates the severity. Arm drift that falls rapidly scores 2, and absent grip scores 2.",protocol_ref:"02.12"},
+       {text:"LAMS score of 2",correct:false,explanation:"This significantly underestimates the deficit. Multiple findings are present.",protocol_ref:"02.12"},
+       {text:"LAMS score of 1",correct:false,explanation:"Only facial droop alone would score 1. This patient has significant arm and grip deficits.",protocol_ref:"02.12"}
+     ]},
+    {phase:"assessment",prompt:"What critical time must be determined and documented precisely?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Last known well time (last time seen normal)",correct:true,explanation:"Per RI protocol, determine the time of symptom onset — the last time the patient was seen normal. Every effort should be made to be precise.",protocol_ref:"02.12"},
+       {text:"Time of EMS arrival",correct:false,explanation:"While important for documentation, the last known well time is the critical determination for stroke treatment decisions.",protocol_ref:"02.12"},
+       {text:"Time patient ate last meal",correct:false,explanation:"Last meal time is not a priority determination in stroke assessment.",protocol_ref:"02.12"},
+       {text:"Time of last medication dose",correct:false,explanation:"While relevant to history, the last known well time is the critical factor for thrombolytic eligibility.",protocol_ref:"02.12"}
+     ]},
+    {phase:"treatment",prompt:"What blood glucose finding would change your management?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Blood glucose ≤ 60 mg/dL — treat per Diabetic Emergencies Protocol",correct:true,explanation:"Per protocol, determine bG level and manage per Diabetic Emergencies Protocol if indicated. Hypoglycemia can mimic stroke.",protocol_ref:"02.12"},
+       {text:"Blood glucose > 200 mg/dL — administer insulin",correct:false,explanation:"Insulin administration is not part of the prehospital stroke protocol. Hyperglycemia does not change acute stroke management in the field.",protocol_ref:"02.12"},
+       {text:"Blood glucose 80-120 mg/dL — administer oral glucose",correct:false,explanation:"A glucose of 80-120 is normal and does not require treatment.",protocol_ref:"02.12"},
+       {text:"Blood glucose finding does not affect stroke management",correct:false,explanation:"Hypoglycemia can cause stroke-like symptoms and must be corrected.",protocol_ref:"02.12"}
+     ]},
+    {phase:"transport",prompt:"With a LAMS score of 5, where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest Comprehensive Stroke Center (Rhode Island Hospital)",correct:true,explanation:"Per RI protocol, patients with LAMS ≥ 4 should be transported to the nearest Comprehensive Stroke Center. A LAMS ≥ 4 is suggestive of Emergent Large Vessel Occlusion (ELVO).",protocol_ref:"02.12"},
+       {text:"Nearest Primary Stroke Center or Acute Stroke Ready Hospital",correct:false,explanation:"LAMS 0-3 goes to PSC/ASRH. LAMS ≥ 4 requires a Comprehensive Stroke Center for potential embolectomy.",protocol_ref:"02.12"},
+       {text:"Nearest hospital regardless of stroke designation",correct:false,explanation:"Stroke patients require transport to designated stroke facilities for time-sensitive interventions.",protocol_ref:"02.12"},
+       {text:"Patient's primary care physician's hospital",correct:false,explanation:"ELVO patients require the highest level of stroke care at a Comprehensive Stroke Center.",protocol_ref:"02.12"}
+     ]}
+  ]
+},
+{
+  id:"med-allergy-01",title:"Allergic Reaction at a Cookout",category:"Medical",difficulty:"Medium",
+  dispatch:"Respond to a backyard gathering for a 34-year-old female with difficulty breathing after eating.",
+  patient:{age:34,sex:"F",cc:"Difficulty breathing, hives"},
+  scene:"Summer cookout in a backyard. Patient is sitting in a chair, visibly distressed with widespread hives on arms and torso. Friends report she ate shrimp about 10 minutes ago.",
+  vitals:{hr:118,bp:"86/54",rr:28,spo2:90,gcs:14,temp:"98.8°F",bg:null},
+  history:{pmh:"Known shellfish allergy (carries EpiPen but didn't bring it)",meds:"None",allergies:"Shellfish"},
+  presentation:"Patient has generalized urticaria, angioedema of the lips, audible wheezing bilaterally, stridor noted. Hypotensive with poor perfusion. Speaking in 2-3 word sentences.",
+  primary_protocol:"02.04A",related_protocols:["02.20A","02.08A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"Based on the presentation, what is the severity classification of this allergic reaction?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Severe — skin symptoms with respiratory distress AND hypotension/poor perfusion",correct:true,explanation:"Per RI protocol, severe = +/- skin symptoms plus respiratory symptoms (wheezing, dyspnea, hypoxia) OR GI symptoms WITH hypotension and poor perfusion.",protocol_ref:"02.04A"},
+       {text:"Moderate — skin symptoms with respiratory distress but normal BP",correct:false,explanation:"This patient is hypotensive (86/54) with poor perfusion, making this severe, not moderate.",protocol_ref:"02.04A"},
+       {text:"Mild — just hives and itching",correct:false,explanation:"This patient has wheezing, stridor, angioedema, and hypotension — far beyond mild.",protocol_ref:"02.04A"},
+       {text:"Cannot classify without blood work",correct:false,explanation:"Anaphylaxis severity is classified clinically, not by lab values.",protocol_ref:"02.04A"}
+     ]},
+    {phase:"treatment",prompt:"What is the priority EMT-level intervention for this patient?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Epinephrine (1:1000) 0.3 mg IM in the lateral thigh (auto-injector preferred)",correct:true,explanation:"For severe anaphylaxis, administer EPINEPHRINE 0.3 mg IM every 5 minutes if no improvement, max 3 doses. Auto-injector preferred.",protocol_ref:"02.04A"},
+       {text:"Diphenhydramine (Benadryl) 50 mg PO",correct:false,explanation:"Oral antihistamines are too slow for severe anaphylaxis and not in the EMT scope. Epinephrine is the life-saving intervention.",protocol_ref:"02.04A"},
+       {text:"Albuterol nebulizer only",correct:false,explanation:"While albuterol may help with wheezing, epinephrine is the priority intervention for severe anaphylaxis.",protocol_ref:"02.04A"},
+       {text:"Place patient supine and wait for ALS",correct:false,explanation:"Delaying epinephrine administration in severe anaphylaxis can be fatal. EMTs can and should administer IM epinephrine.",protocol_ref:"02.04A"}
+     ]},
+    {phase:"treatment",prompt:"What additional ALS interventions are indicated for this severe anaphylaxis?",multi_select:true,level_filter:"ACP",
+     options:[
+       {text:"Repeat epinephrine 0.3 mg IM every 5 min if no improvement (max 3 doses)",correct:true,explanation:"Per protocol, repeat IM epinephrine every 5 minutes if no improvement, up to 3 doses. Additional doses require MEDICAL CONTROL authorization.",protocol_ref:"02.04A"},
+       {text:"Albuterol 2.5-5 mg via SVN for continued wheezing",correct:true,explanation:"ALBUTEROL 2.5-5 mg (+/- IPRATROPIUM) via SVN for continued wheezing is indicated.",protocol_ref:"02.04A"},
+       {text:"Normal saline IV bolus for hypotension",correct:true,explanation:"Manage hypotension per General Shock and Hypotension Protocol with IV fluid resuscitation.",protocol_ref:"02.20A"},
+       {text:"Nitroglycerin 0.4 mg SL",correct:false,explanation:"Nitroglycerin causes vasodilation and would worsen hypotension. It is contraindicated in this setting.",protocol_ref:"02.04A"},
+       {text:"Diphenhydramine 25-50 mg IV/IM (Paramedic)",correct:true,explanation:"Paramedics may administer diphenhydramine as adjunct therapy for allergic reactions.",protocol_ref:"02.04A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest Hospital Emergency Facility",correct:true,explanation:"Anaphylaxis patients should be transported to the nearest Hospital Emergency Facility for continued monitoring and treatment.",protocol_ref:"02.04A"},
+       {text:"Patient's primary care office",correct:false,explanation:"Severe anaphylaxis requires emergency department care with continuous monitoring.",protocol_ref:"02.04A"},
+       {text:"Urgent care center",correct:false,explanation:"Urgent care facilities cannot manage severe anaphylaxis with hemodynamic instability.",protocol_ref:"02.04A"},
+       {text:"No transport needed if epinephrine resolves symptoms",correct:false,explanation:"All anaphylaxis patients should be transported due to risk of biphasic reactions.",protocol_ref:"02.04A"}
+     ]}
+  ]
+},
+{
+  id:"med-seizure-01",title:"Seizure at the Workplace",category:"Medical",difficulty:"Easy",
+  dispatch:"Respond to an office building for a 45-year-old male having a seizure.",
+  patient:{age:45,sex:"M",cc:"Seizure"},
+  scene:"Office break room. Coworkers have moved chairs away from the patient who is on the ground, actively seizing with bilateral tonic-clonic activity. Seizure has been ongoing for approximately 4 minutes per bystanders.",
+  vitals:{hr:110,bp:"148/90",rr:8,spo2:88,gcs:3,temp:"99.2°F",bg:"72 mg/dL"},
+  history:{pmh:"Epilepsy",meds:"Levetiracetam (Keppra) — missed last 2 doses",allergies:"Penicillin"},
+  presentation:"Patient is actively seizing with generalized tonic-clonic activity. Cyanotic around lips. Coworkers report he mentioned missing his seizure medication.",
+  primary_protocol:"02.19A",related_protocols:["02.10A","05.01A"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"What is your immediate priority upon arriving to find an actively seizing patient?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Protect the patient from injury, loosen constrictive clothing, do NOT restrain or place objects in mouth",correct:true,explanation:"Per RI protocol, loosen constrictive clothing and protect the patient and EMS healthcare professionals. Never restrain a seizing patient or insert objects in the mouth.",protocol_ref:"02.19A"},
+       {text:"Immediately insert an oral airway to protect the tongue",correct:false,explanation:"Do NOT place objects in the mouth of an actively seizing patient. This can cause injury to the patient and provider.",protocol_ref:"02.19A"},
+       {text:"Hold the patient down to prevent movement",correct:false,explanation:"Restraining a seizing patient can cause injury. Protect from hazards but do not restrain.",protocol_ref:"02.19A"},
+       {text:"Begin CPR immediately",correct:false,explanation:"The patient is seizing, not in cardiac arrest. Seizure management, not CPR, is indicated.",protocol_ref:"02.19A"}
+     ]},
+    {phase:"assessment",prompt:"What assessment finding should be checked that could change your treatment approach?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Blood glucose level — hypoglycemia can cause seizures",correct:true,explanation:"Per protocol, perform blood glucose analysis and manage per Diabetic Emergencies Protocol if indicated. This patient's bG is 72, which is low-normal but should be monitored.",protocol_ref:"02.19A"},
+       {text:"Pupil response — to determine if brain death has occurred",correct:false,explanation:"Pupils may be abnormal during seizure activity but this does not indicate brain death.",protocol_ref:"02.19A"},
+       {text:"12-lead ECG — to rule out cardiac cause",correct:false,explanation:"While cardiac causes are possible, blood glucose is the priority assessment per protocol.",protocol_ref:"02.19A"},
+       {text:"Blood pressure — to determine if hypertensive crisis caused the seizure",correct:false,explanation:"Blood pressure will typically be elevated during seizure activity. Glucose check is the priority per protocol.",protocol_ref:"02.19A"}
+     ]},
+    {phase:"treatment",prompt:"The seizure continues. As an AEMT-C or Paramedic, what medication should you administer for active seizures in a patient WITHOUT IV access?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Midazolam 2.5 mg IM/IN",correct:true,explanation:"Per RI protocol, for active generalized seizures without IV access, administer MIDAZOLAM 2.5 mg IM/IN.",protocol_ref:"02.19A"},
+       {text:"Diazepam 10 mg IV push",correct:false,explanation:"The question specifies no IV access. Diazepam IV requires IV access.",protocol_ref:"02.19A"},
+       {text:"Phenytoin 100 mg IM",correct:false,explanation:"Phenytoin is not in the RI prehospital formulary for seizures.",protocol_ref:"02.19A"},
+       {text:"Lorazepam 4 mg PO",correct:false,explanation:"An actively seizing patient cannot take oral medications. IM/IN routes are needed.",protocol_ref:"02.19A"}
+     ]},
+    {phase:"treatment",prompt:"If IV access is obtained, what medication options are available for ongoing seizures?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Lorazepam 2 mg IV (may repeat q5 min) or Midazolam 2.5 mg IV (may repeat q5 min) or Diazepam 2.5 mg IV",correct:true,explanation:"Per RI protocol, for active seizures with IV access: LORAZEPAM 2 mg IV (may repeat 2 mg q5 min) or MIDAZOLAM 2.5 mg IV/IM/IN (may repeat q5 min) or DIAZEPAM 2.5 mg IV/IN.",protocol_ref:"02.19A"},
+       {text:"Fentanyl 100 mcg IV",correct:false,explanation:"Fentanyl is an analgesic, not an anticonvulsant.",protocol_ref:"02.19A"},
+       {text:"Atropine 1 mg IV",correct:false,explanation:"Atropine is for bradycardia, not seizures.",protocol_ref:"03.05A"},
+       {text:"Amiodarone 150 mg IV",correct:false,explanation:"Amiodarone is an antiarrhythmic, not an anticonvulsant.",protocol_ref:"03.07A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility",correct:true,explanation:"Per protocol, transport to the nearest appropriate Hospital Emergency Facility.",protocol_ref:"02.19A"},
+       {text:"Level 1 Trauma Center",correct:false,explanation:"Trauma center designation is for trauma patients. Medical seizures go to nearest appropriate facility.",protocol_ref:"02.19A"},
+       {text:"Comprehensive Stroke Center",correct:false,explanation:"Stroke centers are for suspected stroke. This is a known epileptic with missed medications.",protocol_ref:"02.19A"},
+       {text:"No transport if seizure stops",correct:false,explanation:"Seizure patients should be transported for evaluation even if the seizure resolves.",protocol_ref:"02.19A"}
+     ]}
+  ]
+},
+{
+  id:"med-diabetic-01",title:"Unresponsive Diabetic",category:"Medical",difficulty:"Easy",
+  dispatch:"Respond to a residence for a 58-year-old female found unresponsive.",
+  patient:{age:58,sex:"F",cc:"Unresponsive"},
+  scene:"Single-story home. Family member called 911. Patient is found on the couch, not responding to voice. Insulin pen and glucose meter are on the coffee table.",
+  vitals:{hr:104,bp:"136/82",rr:20,spo2:96,gcs:8,temp:"98.0°F",bg:"38 mg/dL"},
+  history:{pmh:"Type 1 diabetes, hypothyroidism",meds:"Insulin glargine, insulin lispro, levothyroxine",allergies:"NKDA"},
+  presentation:"Patient is unresponsive to verbal stimuli but withdraws to painful stimuli. Skin is cool and diaphoretic. No evidence of trauma. Family states she was fine 30 minutes ago and had given herself insulin before lunch but then fell asleep without eating.",
+  primary_protocol:"02.10A",related_protocols:["02.05A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"The blood glucose reads 38 mg/dL. The patient is not alert and is responsive only to painful stimuli. As an EMT, what is the appropriate treatment?",multi_select:false,level_filter:"E",
+     options:[
+       {text:"Contact MEDICAL CONTROL for authorization to administer Glucagon 1 mg IM or Glucagon (Baqsimi) 3 mg IN",correct:true,explanation:"Per RI protocol, for bG ≤ 60 with patient not alert to verbal stimuli, EMTs should contact MEDICAL CONTROL for authorization to administer GLUCAGON 1 mg IM or GLUCAGON (Baqsimi) 3 mg IN.",protocol_ref:"02.10A"},
+       {text:"Administer oral glucose 15 gm",correct:false,explanation:"Oral glucose requires an alert patient who can protect their airway. This patient has a GCS of 8 and is not alert.",protocol_ref:"02.10A"},
+       {text:"Administer D50W IV push",correct:false,explanation:"IV dextrose is not within EMT scope of practice.",protocol_ref:"02.10A"},
+       {text:"Monitor and transport without treatment",correct:false,explanation:"Severe hypoglycemia is life-threatening and requires immediate treatment.",protocol_ref:"02.10A"}
+     ]},
+    {phase:"treatment",prompt:"As an AEMT-C or Paramedic with IV access, what is the treatment for this hypoglycemic patient?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Thiamine 100 mg IV, then D10W 250 mL (25 g) IV over 5 minutes; may repeat in 15 minutes if bG < 60",correct:true,explanation:"Per RI protocol for ACP level: 1) Thiamine 100 mg IV/IM, 2) D10W 250 ml (25g) IV over 5 minutes, may repeat in 15 minutes if bG < 60. If unable to establish IV, Glucagon 1 mg IM or Baqsimi 3 mg IN.",protocol_ref:"02.10A"},
+       {text:"D50W 25 g IV push",correct:false,explanation:"RI protocol specifies D10W 250 mL, not D50W. D10 is the current standard.",protocol_ref:"02.10A"},
+       {text:"Insulin 10 units IV",correct:false,explanation:"Insulin would worsen hypoglycemia. This patient needs glucose, not insulin.",protocol_ref:"02.10A"},
+       {text:"Normal saline 1000 mL bolus",correct:false,explanation:"Saline does not contain glucose and will not correct hypoglycemia.",protocol_ref:"02.10A"}
+     ]},
+    {phase:"treatment",prompt:"After treatment, the patient's bG is now 92 mg/dL and she is alert and oriented. She wants to refuse transport. What should you do?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Strongly encourage transport; if patient refuses, follow Refusal of Care protocol with thorough documentation",correct:true,explanation:"While the patient has improved, transport should be strongly encouraged. If refused, follow the Refusal of Patient Care or Transport protocol (06.04) with thorough documentation.",protocol_ref:"06.04"},
+       {text:"Force the patient to go to the hospital",correct:false,explanation:"Competent patients have the right to refuse care. Follow the refusal protocol.",protocol_ref:"06.04"},
+       {text:"Leave without any documentation since patient is better",correct:false,explanation:"All patient contacts must be documented. Refusals require thorough documentation.",protocol_ref:"01.02"},
+       {text:"Transport her against her will since she was unconscious",correct:false,explanation:"If the patient is now competent and alert, she has the right to make medical decisions.",protocol_ref:"06.04"}
+     ]},
+    {phase:"transport",prompt:"If the patient accepts transport, where should she go?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility",correct:true,explanation:"Transport to the nearest appropriate Hospital Emergency Facility for continued evaluation and monitoring.",protocol_ref:"02.10A"},
+       {text:"Her endocrinologist's office",correct:false,explanation:"Emergency patients should be transported to a Hospital Emergency Facility, not an outpatient office.",protocol_ref:"02.10A"},
+       {text:"Urgent care center",correct:false,explanation:"A patient with significant hypoglycemia requiring IV dextrose should go to an ED for continued monitoring.",protocol_ref:"02.10A"},
+       {text:"She doesn't need transport since her sugar is normal now",correct:false,explanation:"Hypoglycemia can recur, especially with long-acting insulin. Hospital monitoring is recommended.",protocol_ref:"02.10A"}
+     ]}
+  ]
+},
+{
+  id:"med-behavioral-01",title:"Behavioral Crisis",category:"Medical",difficulty:"Medium",
+  dispatch:"Respond with PD to a park for a 28-year-old male acting erratically and expressing suicidal thoughts.",
+  patient:{age:28,sex:"M",cc:"Suicidal ideation, erratic behavior"},
+  scene:"City park. Police are on scene. Patient is sitting on a bench, agitated, speaking rapidly. Officers report he was found pacing and talking about wanting to end his life. No weapons found.",
+  vitals:{hr:108,bp:"142/88",rr:22,spo2:98,gcs:15,temp:"98.6°F",bg:"104 mg/dL"},
+  history:{pmh:"Bipolar disorder, anxiety",meds:"Lithium, quetiapine — stopped taking 1 week ago",allergies:"NKDA"},
+  presentation:"Patient is alert, agitated, pacing. Expressing suicidal thoughts but denies a specific plan. Speech is pressured. No evidence of trauma. Appears to have not slept in some time.",
+  primary_protocol:"02.09",related_protocols:["02.25","06.06"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"What is your first priority when arriving at this scene?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Ensure scene safety and confirm law enforcement presence",correct:true,explanation:"Per RI protocol, consider safety of EMS healthcare professionals first. If law enforcement is not present, stage in a safe area until arrival.",protocol_ref:"02.09"},
+       {text:"Immediately approach the patient and begin assessment",correct:false,explanation:"Scene safety must be confirmed first, especially with behavioral emergencies.",protocol_ref:"02.09"},
+       {text:"Ask bystanders to leave the area",correct:false,explanation:"While reducing stimuli is important, ensuring your own safety with law enforcement is the first priority.",protocol_ref:"02.09"},
+       {text:"Set up the stretcher for immediate transport",correct:false,explanation:"Scene safety and de-escalation come before transport preparation.",protocol_ref:"02.09"}
+     ]},
+    {phase:"assessment",prompt:"What medical etiologies should be considered per protocol?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Altered mental status",correct:true,explanation:"Per protocol, consider possible medical etiologies including Altered Mental Status.",protocol_ref:"02.09"},
+       {text:"Diabetic emergency",correct:true,explanation:"Per protocol, consider Diabetic Emergencies as a medical etiology for behavioral symptoms.",protocol_ref:"02.09"},
+       {text:"Toxicological emergency",correct:true,explanation:"Per protocol, consider Toxicological Emergencies as a medical etiology.",protocol_ref:"02.09"},
+       {text:"Head trauma / TBI",correct:true,explanation:"Per protocol, consider Head Trauma - Traumatic Brain Injury as a medical etiology.",protocol_ref:"02.09"},
+       {text:"This is purely psychiatric — no medical causes need consideration",correct:false,explanation:"Protocol explicitly requires considering medical etiologies even when psychiatric history is present.",protocol_ref:"02.09"}
+     ]},
+    {phase:"treatment",prompt:"What approach does RI protocol recommend for managing this patient? (The SAFER model)",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Stabilize situation, Assess/Acknowledge crisis, Facilitate resources, Encourage patient action, Recovery/referral",correct:true,explanation:"The SAFER model: Stabilize by lowering stimuli; Assess and acknowledge by validating feelings; Facilitate resources (clergy, family, mental health); Encourage use of resources; Recovery/referral with transport.",protocol_ref:"02.09"},
+       {text:"Sedate, Assess, Fix, Evaluate, Release",correct:false,explanation:"This is not the SAFER model. Chemical sedation is not the first-line approach.",protocol_ref:"02.09"},
+       {text:"Secure, Arrest, Force compliance, Evacuate, Report",correct:false,explanation:"This is not the SAFER model and does not reflect therapeutic communication principles.",protocol_ref:"02.09"},
+       {text:"There is no specific communication model in RI protocol",correct:false,explanation:"RI protocol specifically includes the SAFER model for behavioral emergencies.",protocol_ref:"02.09"}
+     ]},
+    {phase:"transport",prompt:"The patient agrees to go to the hospital. What are the preferred destination options?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Mental Health Preferred Facility (e.g., Landmark, Newport, Our Lady of Fatima, RIH, Roger Williams) or BH Link",correct:true,explanation:"Per RI protocol Table 2, Mental Health Preferred Facilities include Landmark, Newport, Our Lady of Fatima, RIH, and Roger Williams. BH Link in East Providence is also an option.",protocol_ref:"02.09"},
+       {text:"Any hospital emergency department",correct:false,explanation:"While any ED can accept the patient, RI protocol designates Mental Health Preferred Facilities for optimal care.",protocol_ref:"02.09"},
+       {text:"Directly to a psychiatric inpatient unit",correct:false,explanation:"EMS transports to emergency facilities, not directly to inpatient units.",protocol_ref:"02.09"},
+       {text:"Police station for further evaluation",correct:false,explanation:"EMS transports patients to medical/behavioral health facilities, not police stations.",protocol_ref:"02.09"}
+     ]}
+  ]
+},
+{
+  id:"med-resp-01",title:"Asthma Exacerbation",category:"Medical",difficulty:"Easy",
+  dispatch:"Respond to an apartment for a 22-year-old female with difficulty breathing.",
+  patient:{age:22,sex:"F",cc:"Difficulty breathing"},
+  scene:"Third-floor apartment. Patient is sitting upright on the edge of her bed, using accessory muscles to breathe. Multiple rescue inhalers visible on the nightstand.",
+  vitals:{hr:122,bp:"132/78",rr:32,spo2:89,gcs:15,temp:"98.8°F",bg:null},
+  history:{pmh:"Asthma (multiple ER visits, one prior intubation)",meds:"Fluticasone/salmeterol, albuterol PRN, prednisone (recently prescribed)",allergies:"Aspirin"},
+  presentation:"Patient is alert, sitting upright, tripoding. Diffuse bilateral expiratory wheezing. Speaking in 1-2 word sentences. Using accessory muscles. Anxious appearing.",
+  primary_protocol:"02.08A",related_protocols:["07.01","05.01A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"What features of this presentation indicate a severe asthma exacerbation?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Speaking in 1-2 word sentences",correct:true,explanation:"Inability to speak in full sentences indicates severe air trapping and significant work of breathing.",protocol_ref:"02.08A"},
+       {text:"SpO2 of 89%",correct:true,explanation:"Hypoxia (SpO2 < 92%) indicates significant bronchospasm and inadequate gas exchange.",protocol_ref:"02.08A"},
+       {text:"Use of accessory muscles and tripoding",correct:true,explanation:"Accessory muscle use and tripod positioning indicate severe respiratory distress with increased work of breathing.",protocol_ref:"02.08A"},
+       {text:"History of prior intubation",correct:true,explanation:"A history of prior intubation for asthma indicates the patient is at high risk for life-threatening exacerbations.",protocol_ref:"02.08A"},
+       {text:"Temperature of 98.8°F",correct:false,explanation:"This is a normal temperature and does not indicate severity.",protocol_ref:"02.08A"}
+     ]},
+    {phase:"treatment",prompt:"What is the appropriate initial EMT intervention?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Assist patient with their own rescue inhaler or administer Albuterol 2.5 mg (+/- Ipratropium) via SVN",correct:true,explanation:"Per protocol, for patients with wheezing and history of asthma, assist with own rescue inhaler or administer ALBUTEROL 2.5 mg (+/- IPRATROPIUM 500 mcg) via SVN.",protocol_ref:"02.08A"},
+       {text:"Oxygen to improve SpO2",correct:true,explanation:"With SpO2 of 89%, supplemental oxygen is indicated to maintain SpO2 94-99%.",protocol_ref:"01.01"},
+       {text:"Consider CPAP at 5-10 cmH2O if not responding to initial therapy",correct:true,explanation:"Per protocol, for patients not responding to initial therapy, consider CPAP at 5-10 cmH2O.",protocol_ref:"02.08A"},
+       {text:"Administer epinephrine 0.3 mg IM immediately",correct:false,explanation:"At EMT level, IM epinephrine for asthma is not indicated. At AEMT-C level, it requires MEDICAL CONTROL authorization and is only for patients in extremis.",protocol_ref:"02.08A"},
+       {text:"Intubate immediately",correct:false,explanation:"Intubation is a last resort. Bronchodilators and CPAP should be tried first.",protocol_ref:"02.08A"}
+     ]},
+    {phase:"treatment",prompt:"What additional medications can an AEMT-C or Paramedic administer?",multi_select:true,level_filter:"CP",
+     options:[
+       {text:"Albuterol 2.5-5 mg with Ipratropium 500 mcg via SVN (may repeat up to 4 doses)",correct:true,explanation:"ALS may administer ALBUTEROL 2.5-5 mg (initial dose should include IPRATROPIUM 500 mcg) via SVN, may repeat to max 4 doses.",protocol_ref:"02.08A"},
+       {text:"Methylprednisolone 125 mg IV",correct:true,explanation:"Per protocol, METHYLPREDNISOLONE 125 mg IV is indicated for asthma exacerbation at AEMT-C/Paramedic level.",protocol_ref:"02.08A"},
+       {text:"Epinephrine 0.3 mg IM for patient in extremis (with MEDICAL CONTROL authorization at AEMT-C level)",correct:true,explanation:"For asthma patients in extremis, AEMT-C contacts MEDICAL CONTROL for authorization; Paramedic can consider epinephrine per protocol.",protocol_ref:"02.08A"},
+       {text:"Magnesium sulfate 2 g IV",correct:false,explanation:"Magnesium sulfate is not listed in the RI prehospital asthma protocol.",protocol_ref:"02.08A"},
+       {text:"Aminophylline 250 mg IV",correct:false,explanation:"Aminophylline is not in the RI prehospital formulary.",protocol_ref:"02.08A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility",correct:true,explanation:"Per protocol, transport to the nearest appropriate Hospital Emergency Facility.",protocol_ref:"02.08A"},
+       {text:"Her pulmonologist's office",correct:false,explanation:"Acute respiratory distress requires emergency department care.",protocol_ref:"02.08A"},
+       {text:"The hospital where she was previously intubated, even if further away",correct:false,explanation:"Nearest appropriate facility takes priority in acute respiratory distress unless the patient is stable enough for a preference.",protocol_ref:"02.08A"},
+       {text:"Urgent care center",correct:false,explanation:"A patient with severe asthma, prior intubation history, and SpO2 of 89% needs an emergency department.",protocol_ref:"02.08A"}
+     ]}
+  ]
+},
+{
+  id:"med-ams-01",title:"Found Down in Parking Lot",category:"Medical",difficulty:"Medium",
+  dispatch:"Respond to a grocery store parking lot for a person found down.",
+  patient:{age:35,sex:"M",cc:"Found unresponsive"},
+  scene:"Grocery store parking lot. Bystander found patient slumped against a car. Patient is semi-conscious, responsive only to painful stimuli. A syringe is visible on the ground nearby.",
+  vitals:{hr:56,bp:"90/58",rr:4,spo2:78,gcs:6,temp:"97.2°F",bg:"110 mg/dL"},
+  history:{pmh:"Unknown",meds:"Unknown",allergies:"Unknown"},
+  presentation:"Patient is obtunded. Pinpoint pupils bilaterally. Respiratory rate of 4 with shallow respirations. Cyanosis of lips and nail beds. Track marks noted on bilateral upper extremities.",
+  primary_protocol:"04.18A",related_protocols:["02.05A","05.01A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"Based on the clinical presentation, what toxidrome is this patient displaying?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Opioid toxidrome — altered mental status, pinpoint pupils, respiratory depression, hypotension",correct:true,explanation:"Per RI protocol, opioid toxicity presents with altered mental status, pinpoint pupils, respiratory depression, and hypotension.",protocol_ref:"04.18A"},
+       {text:"Anticholinergic toxidrome",correct:false,explanation:"Anticholinergic presents with tachycardia, hyperthermia, dilated pupils — opposite of this presentation.",protocol_ref:"04.18A"},
+       {text:"Sympathomimetic toxidrome",correct:false,explanation:"Sympathomimetics cause tachycardia, hypertension, dilated pupils, agitation — opposite of this.",protocol_ref:"04.18A"},
+       {text:"Cholinergic toxidrome",correct:false,explanation:"Cholinergic (SLUDGEM) presents with salivation, lacrimation, urination, defecation, miosis, bradycardia, bronchospasm.",protocol_ref:"04.18A"}
+     ]},
+    {phase:"treatment",prompt:"What is the immediate EMT-level treatment for this patient?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Naloxone 0.4-4 mg IN, repeat 2 mg every 3-5 minutes until adequate ventilation (max 10 mg)",correct:true,explanation:"Per RI protocol, for known or suspected opioid overdose with respiratory depression/apnea, NALOXONE 0.4-4 mg IN, repeat 2 mg q3-5 min until adequate ventilation or 10 mg administered.",protocol_ref:"04.18A"},
+       {text:"Bag-valve mask ventilations with supplemental oxygen",correct:true,explanation:"With a RR of 4 and SpO2 of 78%, assisted ventilations are critical while naloxone takes effect.",protocol_ref:"05.01A"},
+       {text:"Oral glucose administration",correct:false,explanation:"Blood glucose is 110 mg/dL (normal). Oral glucose is not indicated and the patient cannot protect their airway.",protocol_ref:"02.10A"},
+       {text:"Epinephrine 0.3 mg IM",correct:false,explanation:"Epinephrine is not indicated for opioid overdose. Naloxone is the specific antidote.",protocol_ref:"04.18A"}
+     ]},
+    {phase:"treatment",prompt:"The patient responds to naloxone and becomes alert. Per RI protocol, what should happen next?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Follow the recovery coach algorithm; strongly encourage transport due to risk of renarcotization",correct:true,explanation:"Per protocol, follow the recovery coach algorithm. Naloxone's duration may be shorter than the opioid, risking renarcotization.",protocol_ref:"04.18A"},
+       {text:"Release the patient since they are now alert",correct:false,explanation:"Naloxone may wear off before the opioid, causing recurrent respiratory depression. Transport is strongly encouraged.",protocol_ref:"04.18A"},
+       {text:"Administer additional naloxone to ensure full reversal",correct:false,explanation:"Titrate naloxone to adequate ventilation, not to full alertness. Over-reversal can cause withdrawal, agitation, and vomiting.",protocol_ref:"04.18A"},
+       {text:"Contact law enforcement for arrest",correct:false,explanation:"EMS providers focus on patient care, not law enforcement actions.",protocol_ref:"04.18A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility; consider Opioid Use Disorder Preferred Facility",correct:true,explanation:"Transport to nearest Hospital Emergency Facility. RI designates Opioid Use Disorder Preferred Facilities including Kent, Miriam, Newport, Our Lady of Fatima, RIH, and Roger Williams.",protocol_ref:"04.18A"},
+       {text:"BH Link only",correct:false,explanation:"BH Link is for behavioral health. Opioid overdose with potential renarcotization requires ED monitoring.",protocol_ref:"01.01"},
+       {text:"Detox facility directly",correct:false,explanation:"Acute opioid overdose requires ED evaluation first due to risk of renarcotization.",protocol_ref:"04.18A"},
+       {text:"No transport needed if naloxone is effective",correct:false,explanation:"Risk of renarcotization makes hospital monitoring essential.",protocol_ref:"04.18A"}
+     ]}
+  ]
+},
+{
+  id:"med-sepsis-01",title:"Nursing Home Fever",category:"Medical",difficulty:"Hard",
+  dispatch:"Respond to a nursing facility for an 82-year-old female with fever and altered mental status.",
+  patient:{age:82,sex:"F",cc:"Fever, altered mental status"},
+  scene:"Skilled nursing facility. Staff reports the patient has had increasing confusion over the past 12 hours with fever. She has an indwelling urinary catheter.",
+  vitals:{hr:112,bp:"84/52",rr:24,spo2:93,gcs:12,temp:"102.8°F",bg:"188 mg/dL"},
+  history:{pmh:"UTIs (recurrent), CHF, dementia (baseline oriented to person only), hypertension",meds:"Furosemide, lisinopril, donepezil",allergies:"Ciprofloxacin"},
+  presentation:"Patient is confused (more than baseline per staff), flushed, warm to touch. Tachycardic. Urinary catheter in place with cloudy, foul-smelling urine. Lungs have bibasilar crackles.",
+  primary_protocol:"02.22A",related_protocols:["02.20A","02.05A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"How many SIRS criteria does this patient meet?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"3 criteria: Temperature > 100.4°F, Heart rate > 90, Respiratory rate > 20",correct:true,explanation:"Per RI protocol, SIRS criteria: Temp >100.4°F (102.8 ✓), HR >90 (112 ✓), RR >20 (24 ✓). Patient meets 3 of 3 SIRS criteria with suspected UTI infection.",protocol_ref:"02.22A"},
+       {text:"1 criterion: only fever",correct:false,explanation:"The patient also has HR 112 (>90) and RR 24 (>20), meeting additional SIRS criteria.",protocol_ref:"02.22A"},
+       {text:"2 criteria: fever and tachycardia",correct:false,explanation:"The RR of 24 also meets SIRS criteria (>20), so 3 criteria are met.",protocol_ref:"02.22A"},
+       {text:"0 criteria — this is just a UTI",correct:false,explanation:"UTI with systemic inflammatory response is sepsis. Multiple SIRS criteria are clearly met.",protocol_ref:"02.22A"}
+     ]},
+    {phase:"assessment",prompt:"Does this patient meet criteria for severe sepsis or septic shock?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Yes — severe sepsis: sepsis with hypotension (SBP < 90)",correct:true,explanation:"Per RI protocol, severe sepsis is identified by hypotension (SBP < 90). This patient's SBP is 84, meeting severe sepsis criteria.",protocol_ref:"02.22A"},
+       {text:"No — just sepsis without organ dysfunction",correct:false,explanation:"The SBP of 84 is < 90, indicating severe sepsis.",protocol_ref:"02.22A"},
+       {text:"Yes — septic shock, as she has sepsis with hypotension",correct:false,explanation:"Septic shock requires hypotension despite adequate fluid resuscitation requiring vasopressors. We haven't attempted fluids yet.",protocol_ref:"02.22A"},
+       {text:"Cannot determine without lactate level",correct:false,explanation:"While lactate >2 mmol/L also identifies severe sepsis, hypotension (SBP <90) alone is sufficient.",protocol_ref:"02.22A"}
+     ]},
+    {phase:"treatment",prompt:"What ALS interventions are indicated? (Select all that apply)",multi_select:true,level_filter:"ACP",
+     options:[
+       {text:"Lactated Ringer's 500 mL IV bolus, repeat to achieve SBP ≥ 100 or MAP ≥ 65 (max 3L)",correct:true,explanation:"Per RI protocol, LACTATED RINGER'S 500 ml IV, repeat to achieve SBP ≥100 or MAP ≥65 (maximum 3L).",protocol_ref:"02.22A"},
+       {text:"Maintain patient supine if tolerated",correct:true,explanation:"Per protocol, if tolerated, maintain the patient in a supine position.",protocol_ref:"02.22A"},
+       {text:"Provide early notification to destination and declare a SEPSIS ALERT",correct:true,explanation:"Per protocol, provide early notification to destination facility and declare a SEPSIS ALERT.",protocol_ref:"02.22A"},
+       {text:"Obtain fingertip lactate measurement if available",correct:true,explanation:"Per protocol, if available, obtain fingertip lactate measurement.",protocol_ref:"02.22A"},
+       {text:"Administer broad-spectrum antibiotics in the field",correct:false,explanation:"Antibiotics are not in the prehospital scope. Early notification allows the hospital to prepare antibiotics.",protocol_ref:"02.22A"}
+     ]},
+    {phase:"treatment",prompt:"After 1.5L of Lactated Ringer's, the SBP remains 82. At the Paramedic level, what vasopressor is indicated?",multi_select:false,level_filter:"P",
+     options:[
+       {text:"Push-dose epinephrine 10-20 mcg IV (1-2 mL of 10 mcg/mL concentration)",correct:true,explanation:"Per RI protocol, for hypotension refractory to IVF, push dose EPINEPHRINE 10-20 mcg IV for septic shock.",protocol_ref:"02.22A"},
+       {text:"Dopamine 20 mcg/kg/min IV",correct:false,explanation:"While dopamine is in the formulary, push-dose epinephrine is the specified vasopressor in the RI sepsis protocol.",protocol_ref:"02.22A"},
+       {text:"Norepinephrine 0.1 mcg/kg/min",correct:false,explanation:"While norepinephrine is the hospital standard for septic shock, the RI prehospital protocol specifies push-dose epinephrine.",protocol_ref:"02.22A"},
+       {text:"Vasopressin 20 units IV",correct:false,explanation:"Vasopressin is not in the RI prehospital formulary for sepsis.",protocol_ref:"02.22A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility with SEPSIS ALERT notification",correct:true,explanation:"Per protocol, transport to the nearest appropriate Hospital Emergency Facility with early SEPSIS ALERT notification.",protocol_ref:"02.22A"},
+       {text:"Back to her primary care physician",correct:false,explanation:"Severe sepsis requires emergency department care with IV antibiotics and monitoring.",protocol_ref:"02.22A"},
+       {text:"Level 1 Trauma Center specifically",correct:false,explanation:"Sepsis is a medical emergency. Nearest appropriate facility is correct; trauma center designation is not required.",protocol_ref:"02.22A"},
+       {text:"Keep at nursing facility and wait for physician",correct:false,explanation:"Severe sepsis is a medical emergency requiring immediate transport to an emergency department.",protocol_ref:"02.22A"}
+     ]}
+  ]
+},
+// ── CARDIAC ──
+{
+  id:"card-arrest-01",title:"Witnessed Cardiac Arrest",category:"Cardiac",difficulty:"Hard",
+  dispatch:"Respond to a fitness center for a 55-year-old male in cardiac arrest. Bystander CPR in progress.",
+  patient:{age:55,sex:"M",cc:"Cardiac arrest"},
+  scene:"Gym floor. Bystanders performing CPR. AED on scene, no shock delivered yet. Patient collapsed while on the treadmill approximately 6 minutes ago. A gym member started CPR within 1 minute.",
+  vitals:{hr:0,bp:"--",rr:0,spo2:"--",gcs:3,temp:null,bg:null},
+  history:{pmh:"Unknown (gym staff checking membership records)",meds:"Unknown",allergies:"Unknown"},
+  presentation:"Unresponsive, apneic, pulseless. Bystanders performing chest compressions. AED pads applied but not analyzed yet.",
+  primary_protocol:"03.03A",related_protocols:["03.04A","06.08"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"Bystander CPR is in progress. What should happen immediately?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Analyze rhythm with defibrillator immediately; deliver shock if VF/VT without delay",correct:true,explanation:"Per RI protocol, a defibrillator should be applied ASAP and ECG rhythm analysis should immediately follow. If VF/VT, electrical therapy should be delivered without delay.",protocol_ref:"03.03A"},
+       {text:"Stop CPR and do a thorough assessment first",correct:false,explanation:"Continuous compressions and delivery of electrical therapy should take priority over other care. Minimize interruptions.",protocol_ref:"03.03A"},
+       {text:"Establish IV access before analyzing rhythm",correct:false,explanation:"Defibrillation and continuous compressions take priority over IV access.",protocol_ref:"03.03A"},
+       {text:"Intubate first to secure the airway",correct:false,explanation:"Compressions and defibrillation take priority. Airway management should not delay these interventions.",protocol_ref:"03.03A"}
+     ]},
+    {phase:"treatment",prompt:"The AED/monitor shows ventricular fibrillation. After the first shock, what is the next step?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Resume CPR immediately for 2 minutes without a pulse check",correct:true,explanation:"Per RI protocol, CPR should be resumed immediately following delivery of electrical therapy without a pulse check.",protocol_ref:"03.03A"},
+       {text:"Check for a pulse immediately after the shock",correct:false,explanation:"Protocol states CPR should resume immediately after shock WITHOUT a pulse check. Check at next rhythm analysis in 2 minutes.",protocol_ref:"03.03A"},
+       {text:"Administer epinephrine immediately after the first shock",correct:false,explanation:"Compressions resume immediately. Epinephrine timing follows AHA guidelines during subsequent cycles.",protocol_ref:"03.03A"},
+       {text:"Wait 30 seconds to see if the rhythm changes",correct:false,explanation:"Any pause in compressions is detrimental. Resume CPR immediately after shock.",protocol_ref:"03.03A"}
+     ]},
+    {phase:"treatment",prompt:"What are key ALS interventions during cardiac arrest management? (Select all that apply)",multi_select:true,level_filter:"CP",
+     options:[
+       {text:"Epinephrine 1 mg IV/IO every 3-5 minutes",correct:true,explanation:"Per AHA guidelines incorporated in RI protocol, epinephrine 1 mg IV/IO every 3-5 minutes during cardiac arrest.",protocol_ref:"03.03A"},
+       {text:"For refractory VF/VT: Amiodarone 300 mg IV/IO first dose, 150 mg second dose",correct:true,explanation:"For shock-refractory VF/VT, amiodarone is indicated per RI protocol.",protocol_ref:"03.03A"},
+       {text:"Switch compressors every 2 minutes; limit rhythm check pauses to ≤ 5 seconds",correct:true,explanation:"Per protocol, switch healthcare professionals every 2 minutes and limit pauses to ≤ 5 seconds.",protocol_ref:"03.03A"},
+       {text:"Pre-charge defibrillator at 1:45 of each duty cycle",correct:true,explanation:"Per RI protocol, pre-charge the defibrillator at 1:45 seconds of each duty cycle to minimize pre-shock pauses.",protocol_ref:"03.03A"},
+       {text:"Administer sodium bicarbonate 1 mEq/kg IV routinely",correct:false,explanation:"Routine sodium bicarbonate is not recommended in cardiac arrest.",protocol_ref:"03.03A"}
+     ]},
+    {phase:"treatment",prompt:"ROSC is achieved. What post-cardiac arrest care is indicated?",multi_select:true,level_filter:"ACP",
+     options:[
+       {text:"Acquire a multi-lead (≥12-lead) ECG",correct:true,explanation:"Per Routine Patient Care, a multi-lead ECG should be obtained in all patients post medical cardiac arrest with ROSC.",protocol_ref:"03.04A"},
+       {text:"Titrate oxygen to maintain SpO2 94-99%",correct:true,explanation:"Per protocol, once ROSC is achieved, FiO2 should be titrated to the lowest concentration to maintain SpO2 94-99%.",protocol_ref:"01.01"},
+       {text:"Monitor with waveform capnography",correct:true,explanation:"Continuous waveform capnography is important for monitoring ventilation and detecting rearrest.",protocol_ref:"03.04A"},
+       {text:"Administer high-flow oxygen at 15 L/min continuously",correct:false,explanation:"Post-ROSC, oxygen should be titrated to 94-99%. Hyperoxia may worsen neurologic outcomes.",protocol_ref:"01.01"}
+     ]},
+    {phase:"transport",prompt:"Post-ROSC with STEMI on 12-lead, where should this patient go?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest PCI-capable hospital for emergent cardiac catheterization",correct:true,explanation:"Post cardiac arrest with STEMI requires emergent PCI. Transport to nearest PCI-capable facility.",protocol_ref:"03.02"},
+       {text:"Nearest hospital regardless of capabilities",correct:false,explanation:"STEMI with ROSC benefits from direct transport to PCI-capable facility.",protocol_ref:"03.02"},
+       {text:"Comprehensive Stroke Center",correct:false,explanation:"Stroke centers are for stroke. This is a cardiac arrest with STEMI.",protocol_ref:"03.02"},
+       {text:"Stay on scene until fully stabilized",correct:false,explanation:"Time to PCI is critical. Transport should not be delayed.",protocol_ref:"03.02"}
+     ]}
+  ]
+},
+{
+  id:"card-brady-01",title:"Syncopal Episode with Bradycardia",category:"Cardiac",difficulty:"Medium",
+  dispatch:"Respond to a church for a 78-year-old male who fainted during services.",
+  patient:{age:78,sex:"M",cc:"Syncope"},
+  scene:"Church pew area. Patient is conscious but pale, lying on the pew. Parishioners report he stood up and then collapsed. He regained consciousness within about 30 seconds.",
+  vitals:{hr:38,bp:"82/50",rr:16,spo2:94,gcs:14,temp:"97.8°F",bg:"104 mg/dL"},
+  history:{pmh:"Hypertension, 2nd degree heart block (Mobitz Type I) — diagnosed last year",meds:"Metoprolol, lisinopril, aspirin",allergies:"Codeine"},
+  presentation:"Patient is drowsy, pale, diaphoretic. Heart rate 38, irregular. Intermittent dizziness. Blood pressure 82/50.",
+  primary_protocol:"03.05A",related_protocols:["02.24","01.01"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"This patient has symptomatic bradycardia. What symptoms confirm hemodynamic instability?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Hypotension (SBP 82)",correct:true,explanation:"Per RI protocol, symptomatic bradycardia includes HR < 60 with hypotension as evidence of poor perfusion.",protocol_ref:"03.05A"},
+       {text:"Syncope related to bradycardia",correct:true,explanation:"Per protocol, syncope related to bradycardia is a sign of hemodynamic instability.",protocol_ref:"03.05A"},
+       {text:"Altered mental status (drowsy, GCS 14)",correct:true,explanation:"Per protocol, altered mental status is evidence of poor perfusion from symptomatic bradycardia.",protocol_ref:"03.05A"},
+       {text:"Diaphoresis",correct:true,explanation:"Diaphoresis indicates poor perfusion and sympathetic compensation.",protocol_ref:"03.05A"},
+       {text:"Normal respiratory rate",correct:false,explanation:"A normal respiratory rate does not indicate hemodynamic instability.",protocol_ref:"03.05A"}
+     ]},
+    {phase:"assessment",prompt:"What treatable etiology should be considered in this patient?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Beta blocker toxicity (patient takes metoprolol)",correct:true,explanation:"Per protocol, consider treatable etiologies including beta blocker or calcium channel blocker toxicity. This patient takes metoprolol.",protocol_ref:"03.05A"},
+       {text:"Opioid overdose",correct:false,explanation:"There's no evidence of opioid use. Beta blocker effect is the more likely culprit.",protocol_ref:"03.05A"},
+       {text:"Anaphylaxis",correct:false,explanation:"No exposure history, no urticaria, no wheezing to suggest anaphylaxis.",protocol_ref:"03.05A"},
+       {text:"Hyperglycemia",correct:false,explanation:"Blood glucose is 104 mg/dL (normal). Hyperglycemia does not cause bradycardia.",protocol_ref:"03.05A"}
+     ]},
+    {phase:"treatment",prompt:"As an AEMT-C or Paramedic, what is the first-line pharmacological treatment?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Atropine 0.5-1.0 mg IV, repeat every 3-5 minutes to achieve HR > 60 (max 3 mg)",correct:true,explanation:"Per RI protocol, ATROPINE SULFATE 0.5-1.0 mg IV, repeat every 3-5 minutes to achieve HR > 60 (max dose 3 mg).",protocol_ref:"03.05A"},
+       {text:"Epinephrine 1 mg IV push",correct:false,explanation:"Epinephrine 1 mg is a cardiac arrest dose. For bradycardia, atropine or TCP is first-line.",protocol_ref:"03.05A"},
+       {text:"Amiodarone 150 mg IV",correct:false,explanation:"Amiodarone is for tachycardia, not bradycardia. It could worsen the bradycardia.",protocol_ref:"03.07A"},
+       {text:"Adenosine 12 mg rapid IV push",correct:false,explanation:"Adenosine slows conduction and is for SVT, not bradycardia. It would worsen this patient's condition.",protocol_ref:"03.06A"}
+     ]},
+    {phase:"treatment",prompt:"Atropine is ineffective. What is the next intervention?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Transcutaneous pacing (TCP) with consideration of analgesia/sedation",correct:true,explanation:"Per RI protocol, transcutaneous pacing is indicated for atropine-refractory bradycardia. Consider analgesia and sedation per Patient Comfort Protocol.",protocol_ref:"03.05A"},
+       {text:"Defibrillation at 200J",correct:false,explanation:"Defibrillation is for VF/VT. Pacing is for symptomatic bradycardia.",protocol_ref:"03.05A"},
+       {text:"Synchronized cardioversion",correct:false,explanation:"Cardioversion is for tachyarrhythmias, not bradycardia.",protocol_ref:"03.06A"},
+       {text:"Repeat atropine beyond 3 mg total",correct:false,explanation:"Protocol caps atropine at 3 mg total. Move to TCP if atropine is ineffective.",protocol_ref:"03.05A"}
+     ]},
+    {phase:"treatment",prompt:"At the Paramedic level, what additional medication may be considered for bradycardia refractory to atropine and TCP?",multi_select:false,level_filter:"P",
+     options:[
+       {text:"Dopamine 2-10 mcg/kg/min IV or Epinephrine 2-10 mcg/min IV",correct:true,explanation:"Per RI protocol (Paramedic level), consider DOPAMINE 2-10 mcg/kg/min IV or EPINEPHRINE 2-10 mcg/min IV for refractory bradycardia.",protocol_ref:"03.05A"},
+       {text:"Lidocaine 1 mg/kg IV",correct:false,explanation:"Lidocaine is an antiarrhythmic for ventricular tachycardia, not bradycardia.",protocol_ref:"03.07A"},
+       {text:"Calcium chloride 1 g IV",correct:false,explanation:"Calcium chloride is indicated for calcium channel blocker toxicity or hyperkalemia, not routine refractory bradycardia.",protocol_ref:"04.18A"},
+       {text:"Magnesium 2 g IV",correct:false,explanation:"Magnesium is not indicated for bradycardia management.",protocol_ref:"03.05A"}
+     ]}
+  ]
+},
+{
+  id:"card-svt-01",title:"Palpitations at Work",category:"Cardiac",difficulty:"Medium",
+  dispatch:"Respond to an office for a 32-year-old female with a racing heart and dizziness.",
+  patient:{age:32,sex:"F",cc:"Palpitations, dizziness"},
+  scene:"Office cubicle area. Patient is sitting in her desk chair, clutching her chest. She appears anxious and diaphoretic. Coworkers report sudden onset about 20 minutes ago.",
+  vitals:{hr:186,bp:"96/62",rr:24,spo2:97,gcs:15,temp:"98.4°F",bg:null},
+  history:{pmh:"SVT (diagnosed 2 years ago, one prior ER visit)",meds:"None currently",allergies:"NKDA"},
+  presentation:"Alert, anxious, diaphoretic. Regular narrow complex tachycardia at 186 bpm on monitor. Complains of chest tightness and dizziness. Skin pale.",
+  primary_protocol:"03.06A",related_protocols:["01.01"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"The monitor shows a regular narrow complex tachycardia at 186 bpm. What type of rhythm is this most likely?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Supraventricular tachycardia (SVT) — regular narrow QRS ≤ 0.12 sec, rate ≥ 150",correct:true,explanation:"Per RI protocol, symptomatic narrow complex (QRS ≤ 0.12 sec) tachycardia with HR ≥ 150 with symptoms (dizziness, diaphoresis, chest pain). History of SVT supports this.",protocol_ref:"03.06A"},
+       {text:"Ventricular tachycardia",correct:false,explanation:"VT would show a wide complex QRS (≥ 0.12 sec). This is narrow complex.",protocol_ref:"03.07A"},
+       {text:"Sinus tachycardia",correct:false,explanation:"Sinus tachycardia rarely exceeds 150 in a resting young adult and has an identifiable cause. 186 with sudden onset is more consistent with SVT.",protocol_ref:"03.06A"},
+       {text:"Atrial fibrillation",correct:false,explanation:"A-fib is irregularly irregular. This rhythm is described as regular.",protocol_ref:"03.06A"}
+     ]},
+    {phase:"treatment",prompt:"At the AEMT-C level, what initial intervention should be attempted?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Vagal maneuvers (Valsalva maneuver)",correct:true,explanation:"Per RI protocol (AEMT-C level), attempt vagal maneuvers (Valsalva maneuver) first.",protocol_ref:"03.06A"},
+       {text:"Immediate synchronized cardioversion",correct:false,explanation:"Cardioversion is for the unstable/pre-arrest patient. Vagal maneuvers and adenosine should be tried first in a stable patient.",protocol_ref:"03.06A"},
+       {text:"Amiodarone 150 mg IV",correct:false,explanation:"Amiodarone is for wide complex tachycardia, not narrow complex SVT.",protocol_ref:"03.07A"},
+       {text:"Metoprolol 5 mg IV",correct:false,explanation:"IV beta blockers are not in the RI prehospital SVT protocol.",protocol_ref:"03.06A"}
+     ]},
+    {phase:"treatment",prompt:"Vagal maneuvers are unsuccessful. What medication is indicated for a regular narrow complex tachycardia?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Adenosine 12 mg rapid IV push (may repeat × 1)",correct:true,explanation:"Per RI protocol, if the rhythm is regular, ADENOSINE 12 mg rapid push IV (may repeat ×1).",protocol_ref:"03.06A"},
+       {text:"Diltiazem 0.25 mg/kg IV",correct:false,explanation:"At AEMT-C level, diltiazem requires MEDICAL CONTROL authorization and is typically tried after adenosine. At Paramedic level, it may be considered.",protocol_ref:"03.06A"},
+       {text:"Lidocaine 1 mg/kg IV",correct:false,explanation:"Lidocaine is for ventricular arrhythmias, not SVT.",protocol_ref:"03.07A"},
+       {text:"Atropine 0.5 mg IV",correct:false,explanation:"Atropine is for bradycardia and would worsen tachycardia.",protocol_ref:"03.05A"}
+     ]},
+    {phase:"treatment",prompt:"The patient becomes increasingly unstable — SBP drops to 72, becomes confused. What is the treatment for an unstable/pre-arrest patient with narrow complex tachycardia?",multi_select:false,level_filter:"CP",
+     options:[
+       {text:"Synchronized cardioversion 100-200 J (biphasic) with sedation if SBP ≥ 100",correct:true,explanation:"Per RI protocol, for unstable/pre-arrest patient, perform synchronized CARDIOVERSION 100-200 J. Consider pre-shock sedation with midazolam or diazepam if SBP ≥ 100.",protocol_ref:"03.06A"},
+       {text:"Unsynchronized defibrillation at 200 J",correct:false,explanation:"Unsynchronized defibrillation is for VF/pulseless VT. SVT with a pulse requires synchronized cardioversion.",protocol_ref:"03.06A"},
+       {text:"Continue vagal maneuvers",correct:false,explanation:"The patient is now unstable/pre-arrest. Electrical cardioversion is indicated.",protocol_ref:"03.06A"},
+       {text:"Epinephrine 1 mg IV push",correct:false,explanation:"Epinephrine at arrest dose is for pulseless rhythms. This patient has a pulse (though unstable).",protocol_ref:"03.06A"}
+     ]}
+  ]
+},
+{
+  id:"card-chf-01",title:"Respiratory Distress with Edema",category:"Cardiac",difficulty:"Medium",
+  dispatch:"Respond to a residence for a 70-year-old male with severe difficulty breathing.",
+  patient:{age:70,sex:"M",cc:"Severe difficulty breathing"},
+  scene:"Patient's bedroom. He is sitting bolt upright in bed, propped up on 4 pillows. He appears to be in significant respiratory distress. Ankles are markedly swollen. Prescription bottles on nightstand.",
+  vitals:{hr:108,bp:"168/96",rr:32,spo2:86,gcs:15,temp:"98.2°F",bg:"136 mg/dL"},
+  history:{pmh:"CHF (EF 25%), atrial fibrillation, CKD Stage 3",meds:"Furosemide, carvedilol, lisinopril, apixaban",allergies:"ACE inhibitors (cough)"},
+  presentation:"Alert, severe respiratory distress. Cannot lie flat (orthopnea). Bilateral crackles throughout lung fields. JVD present. 3+ pitting edema bilateral lower extremities. Diaphoretic.",
+  primary_protocol:"03.01",related_protocols:["03.02","07.01"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"What clinical findings are consistent with acute decompensated heart failure?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Bilateral crackles on lung auscultation",correct:true,explanation:"Per RI protocol recognition criteria, bilateral crackles on lung auscultation is a key finding of ADHF/pulmonary edema.",protocol_ref:"03.01"},
+       {text:"Jugular venous distention (JVD)",correct:true,explanation:"JVD is listed in the recognition criteria for ADHF.",protocol_ref:"03.01"},
+       {text:"Peripheral edema",correct:true,explanation:"Peripheral edema is a recognition criterion for ADHF.",protocol_ref:"03.01"},
+       {text:"Orthopnea (cannot lie flat)",correct:true,explanation:"Orthopnea/dyspnea on exertion is a classic finding of heart failure.",protocol_ref:"03.01"},
+       {text:"Clear lung sounds",correct:false,explanation:"Clear lungs would argue against pulmonary edema. This patient has bilateral crackles.",protocol_ref:"03.01"}
+     ]},
+    {phase:"treatment",prompt:"What EMT-level interventions are indicated? (Select all that apply)",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Place patient in upright position as tolerated",correct:true,explanation:"Per RI protocol, place patient in upright position as tolerated and as BP allows.",protocol_ref:"03.01"},
+       {text:"CPAP at 5-10 cmH2O (SBP is ≥ 90)",correct:true,explanation:"Per protocol, for respiratory distress with crackles or SpO2 < 92%, if SBP ≥ 90, provide CPAP up to 10 cmH2O.",protocol_ref:"03.01"},
+       {text:"Aspirin 324 mg (81 mg × 4) chewed",correct:true,explanation:"Per RI protocol, ASPIRIN 81 mg ×4 orally (chewed) unless allergic — part of the ADHF protocol.",protocol_ref:"03.01"},
+       {text:"Lay patient flat to improve venous return",correct:false,explanation:"Lying flat worsens pulmonary edema. Upright position is indicated.",protocol_ref:"03.01"},
+       {text:"Restrict all fluids",correct:false,explanation:"While fluid overload is the problem, actively restricting fluids isn't an EMT intervention listed in protocol.",protocol_ref:"03.01"}
+     ]},
+    {phase:"treatment",prompt:"What ALS medication is indicated for this patient with ADHF and SBP > 100?",multi_select:false,level_filter:"ACP",
+     options:[
+       {text:"Nitroglycerin 0.4 mg SL every 5 minutes if SBP > 100",correct:true,explanation:"Per RI protocol, NITROGLYCERIN 0.4 mg SL every 5 minutes if SBP > 100.",protocol_ref:"03.01"},
+       {text:"Furosemide 80 mg IV immediately",correct:false,explanation:"Per RI protocol, furosemide IV (patient's daily dose, max 80 mg) is only considered when transport time is ≥ 30 minutes, patient takes oral furosemide, and is normotensive.",protocol_ref:"03.01"},
+       {text:"Morphine 4 mg IV",correct:false,explanation:"Morphine is not part of the current RI ADHF/pulmonary edema protocol.",protocol_ref:"03.01"},
+       {text:"Normal saline 500 mL bolus",correct:false,explanation:"IV fluid bolus would worsen fluid overload in ADHF.",protocol_ref:"03.01"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility; consider ALS intercept if available",correct:true,explanation:"Per RI protocol, transport to nearest appropriate Hospital Emergency Facility and consider ALS intercept if available.",protocol_ref:"03.01"},
+       {text:"Comprehensive Stroke Center",correct:false,explanation:"This is a cardiac/respiratory emergency, not a stroke.",protocol_ref:"03.01"},
+       {text:"Patient's cardiologist's office",correct:false,explanation:"Acute decompensated heart failure requires emergency department care.",protocol_ref:"03.01"},
+       {text:"Specialty cardiac surgery center out of state",correct:false,explanation:"Nearest appropriate emergency facility takes priority for acute decompensation.",protocol_ref:"03.01"}
+     ]}
+  ]
+},
+// ── TRAUMA ──
+{
+  id:"trauma-multi-01",title:"MVC with Multiple Injuries",category:"Trauma",difficulty:"Hard",
+  dispatch:"Respond to Route 95 for a motor vehicle crash, single vehicle into a bridge abutment. Driver trapped.",
+  patient:{age:42,sex:"M",cc:"MVC with entrapment"},
+  scene:"Single vehicle vs. bridge abutment at highway speed. Significant intrusion into driver compartment. Airbags deployed. Patient is conscious but trapped by dashboard displacement onto legs. Starred windshield from head strike.",
+  vitals:{hr:124,bp:"88/62",rr:28,spo2:92,gcs:12,temp:null,bg:null},
+  history:{pmh:"Unknown",meds:"Unknown",allergies:"Unknown"},
+  presentation:"Alert but confused. Laceration to forehead with active bleeding. Diminished breath sounds on left. Abdomen rigid. Bilateral lower extremities trapped with obvious deformity of left femur. Skin pale, cool, diaphoretic.",
+  primary_protocol:"04.01A",related_protocols:["04.02","04.04","02.21A","04.03"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"What trauma center triage criteria does this patient meet?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"GCS ≤ 13 (GCS 12 — altered mental status)",correct:true,explanation:"Per RI Trauma Center Triage criteria, GCS ≤ 13 is a physiologic criterion requiring Level 1 Trauma Center.",protocol_ref:"04.01A"},
+       {text:"SBP < 90 (SBP 88)",correct:true,explanation:"Hypotension (SBP < 90) is a physiologic criterion for Level 1 Trauma Center transport.",protocol_ref:"04.01A"},
+       {text:"Vehicle intrusion/entrapment",correct:true,explanation:"Significant vehicle intrusion and patient entrapment are mechanism criteria for trauma center triage.",protocol_ref:"04.01A"},
+       {text:"High-speed MVC",correct:true,explanation:"Highway speed MVC meets mechanism of injury criteria for trauma center triage.",protocol_ref:"04.01A"},
+       {text:"Patient's age (42 y.o.)",correct:false,explanation:"Age 42 doesn't meet the age criterion. Risk increases after age 55 per protocol notes.",protocol_ref:"04.01A"}
+     ]},
+    {phase:"treatment",prompt:"What are the priority interventions? (Select all that apply)",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Spinal precautions — cervical collar and spinal motion restriction",correct:true,explanation:"MVC with entrapment and head injury meets multiple criteria for spinal precautions per protocol 04.03.",protocol_ref:"04.03"},
+       {text:"Control external hemorrhage with direct pressure/tourniquet",correct:true,explanation:"Per External Hemorrhage Control protocol, apply direct pressure. If ineffective, apply tourniquet for extremity hemorrhage.",protocol_ref:"04.04"},
+       {text:"Maintain normothermia — blankets and warm ambulance",correct:true,explanation:"Per Multiple Trauma protocol, maintain normothermia using blankets and increasing ambient temperature.",protocol_ref:"04.01A"},
+       {text:"Limit on-scene time to ≤ 10 minutes",correct:true,explanation:"Per RI protocol, on scene time should be limited to ≤ 10 minutes for trauma patients.",protocol_ref:"04.01A"},
+       {text:"Perform detailed secondary survey before extrication",correct:false,explanation:"Rapid assessment and extrication with transport take priority. Detailed survey can occur during transport.",protocol_ref:"04.01A"}
+     ]},
+    {phase:"treatment",prompt:"Diminished breath sounds on the left with hypotension — the Paramedic suspects tension pneumothorax. What is the intervention?",multi_select:false,level_filter:"P",
+     options:[
+       {text:"Needle thoracostomy (needle decompression) of the left chest",correct:true,explanation:"Per RI protocol (Paramedic), perform needle thoracostomy for suspected tension pneumothorax.",protocol_ref:"04.01A"},
+       {text:"Chest tube insertion",correct:false,explanation:"Chest tube insertion is not a prehospital skill in RI protocols.",protocol_ref:"04.01A"},
+       {text:"Apply an occlusive dressing to the left chest",correct:false,explanation:"Occlusive dressings are for open/sucking chest wounds, not tension pneumothorax.",protocol_ref:"04.01A"},
+       {text:"Increase oxygen flow rate and monitor",correct:false,explanation:"Tension pneumothorax is immediately life-threatening and requires decompression.",protocol_ref:"04.01A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Level 1 Trauma Center (Rhode Island Hospital) if scene-to-door ≤ 45 minutes and no unmanageable airway compromise",correct:true,explanation:"Per RI protocol, patients meeting trauma triage criteria go to Level 1 Trauma Center if scene-to-door ≤ 45 min. Rhode Island Hospital is the ACS verified Level 1 adult trauma center.",protocol_ref:"04.01A"},
+       {text:"Nearest community hospital",correct:false,explanation:"This patient meets multiple criteria for Level 1 Trauma Center transport.",protocol_ref:"04.01A"},
+       {text:"Hasbro Children's Hospital",correct:false,explanation:"Hasbro is for pediatric patients (< 18 y.o.). This is a 42-year-old adult.",protocol_ref:"04.01A"},
+       {text:"Nearest hospital, then transfer to trauma center",correct:false,explanation:"Direct transport to Level 1 is preferred if within 45 minutes scene-to-door.",protocol_ref:"04.01A"}
+     ]}
+  ]
+},
+{
+  id:"trauma-tbi-01",title:"Fall from Ladder",category:"Trauma",difficulty:"Medium",
+  dispatch:"Respond to a residence for a 67-year-old male who fell from a ladder.",
+  patient:{age:67,sex:"M",cc:"Fall from ladder"},
+  scene:"Backyard. Patient fell approximately 10 feet from a ladder onto concrete while cleaning gutters. Found supine on the ground. Witnessed by wife.",
+  vitals:{hr:64,bp:"172/98",rr:10,spo2:93,gcs:9,temp:null,bg:"118 mg/dL"},
+  history:{pmh:"Hypertension, atrial fibrillation",meds:"Eliquis (apixaban), metoprolol, lisinopril",allergies:"NKDA"},
+  presentation:"Patient moans to painful stimuli, eyes open to pain, localizes to pain (GCS E2 V2 M5 = 9). Left pupil 4mm reactive, right pupil 6mm sluggish. Laceration to right temporal area. No other obvious injuries. On anticoagulant.",
+  primary_protocol:"04.02",related_protocols:["02.01","04.03","04.01A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"What is particularly concerning about this patient being on Eliquis (apixaban)?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Increased risk of intracranial hemorrhage — anticoagulated patients with head trauma and altered mental status should go to Level I Trauma Center",correct:true,explanation:"Per RI protocol, patients taking anticoagulant/antiplatelet agents with altered mental status following trauma should be transported to a Level I Trauma Center.",protocol_ref:"04.02"},
+       {text:"Eliquis will mask pain symptoms",correct:false,explanation:"Anticoagulants don't affect pain perception. The concern is increased bleeding risk.",protocol_ref:"04.02"},
+       {text:"Eliquis causes altered mental status",correct:false,explanation:"The altered mental status is from the head injury, not the medication. The medication increases bleeding risk.",protocol_ref:"04.02"},
+       {text:"No significant concern — anticoagulants don't affect trauma outcomes",correct:false,explanation:"Anticoagulants significantly increase the risk of intracranial hemorrhage with head trauma.",protocol_ref:"04.02"}
+     ]},
+    {phase:"assessment",prompt:"The patient has unequal pupils (right > left) with GCS < 8 plus abnormal motor posturing. What does this suggest?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Evidence of increased intracranial pressure (ICP) — manage per Increased ICP protocol",correct:true,explanation:"Per RI protocol 02.01, patients with GCS < 8, unilateral pupil dilation, +/- bradycardia/hypertension have evidence of increased ICP.",protocol_ref:"02.01"},
+       {text:"Basilar skull fracture only",correct:false,explanation:"While possible, unilateral pupil dilation with altered mental status specifically indicates increased ICP/herniation.",protocol_ref:"02.01"},
+       {text:"Orbital fracture causing pupil changes",correct:false,explanation:"Unilateral pupil dilation with altered mental status indicates transtentorial herniation/increased ICP.",protocol_ref:"02.01"},
+       {text:"Normal finding in elderly patients",correct:false,explanation:"Unequal pupils with altered mental status after trauma is always abnormal and suggests increased ICP.",protocol_ref:"02.01"}
+     ]},
+    {phase:"treatment",prompt:"If increased ICP is suspected, how should this patient be ventilated?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Mild hyperventilation to EtCO2 30-35 mmHg (or 14-16 bpm if capnography unavailable)",correct:true,explanation:"Per RI protocol 02.01, for patients with evidence of increased ICP, ventilate to EtCO2 30-35 mmHg. If capnography unavailable, ventilate at 14-16 bpm.",protocol_ref:"02.01"},
+       {text:"Aggressive hyperventilation to EtCO2 < 25 mmHg",correct:false,explanation:"Protocol specifically warns against over-aggressive hyperventilation as it worsens brain ischemia.",protocol_ref:"02.01"},
+       {text:"Normal ventilation at 8-10 bpm",correct:false,explanation:"Normal ventilation (EtCO2 35-45) is for TBI WITHOUT evidence of increased ICP. This patient has ICP signs.",protocol_ref:"04.02"},
+       {text:"No ventilation — let patient breathe spontaneously",correct:false,explanation:"With GCS 9 and RR 10, the patient needs ventilatory support.",protocol_ref:"02.01"}
+     ]},
+    {phase:"treatment",prompt:"The patient meets criteria for increased ICP. At the Paramedic level, what additional treatment is indicated?",multi_select:true,level_filter:"P",
+     options:[
+       {text:"Elevate head of bed > 30° if feasible",correct:true,explanation:"Per RI protocol, if feasible, elevate the head of bed to > 30°.",protocol_ref:"02.01"},
+       {text:"3% saline (HTS) 3 mL/kg IV over 15 minutes",correct:true,explanation:"Per RI protocol (Paramedic level), 3% SALINE (HTS) 3 ml/kg IV over 15 minutes for increased ICP.",protocol_ref:"02.01"},
+       {text:"Avoid tight cervical collars that obstruct venous drainage",correct:true,explanation:"Per protocol, avoid obstructions to venous drainage such as tight cervical collars.",protocol_ref:"02.01"},
+       {text:"Mannitol 1 g/kg IV",correct:false,explanation:"Mannitol is not in the RI prehospital protocol. 3% saline is the specified hyperosmolar therapy.",protocol_ref:"02.01"},
+       {text:"Administer glucose-containing IV fluids",correct:false,explanation:"Per protocol notes, hyperglycemia is associated with worsened neurologic outcome. Glucose solutions should only be given for documented hypoglycemia.",protocol_ref:"02.01"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Level I Trauma Center (Rhode Island Hospital) — TBI with altered mental status, on anticoagulant",correct:true,explanation:"Per protocol, patients with evidence of TBI (altered mental status, significant wound) should go to Level I Trauma Center. Being on anticoagulant with AMS further mandates this.",protocol_ref:"04.02"},
+       {text:"Nearest community hospital",correct:false,explanation:"TBI patients, especially on anticoagulants, need Level I Trauma Center capabilities.",protocol_ref:"04.02"},
+       {text:"Comprehensive Stroke Center",correct:false,explanation:"This is traumatic, not ischemic. Level I Trauma Center is appropriate.",protocol_ref:"04.02"},
+       {text:"Nearest hospital with CT scanner",correct:false,explanation:"Level I Trauma Center provides the comprehensive trauma and neurosurgical care this patient needs.",protocol_ref:"04.02"}
+     ]}
+  ]
+},
+{
+  id:"trauma-burn-01",title:"Kitchen Fire Burns",category:"Trauma",difficulty:"Medium",
+  dispatch:"Respond to a residence for a 48-year-old female with burns from a grease fire.",
+  patient:{age:48,sex:"F",cc:"Burns from grease fire"},
+  scene:"Kitchen with evidence of a grease fire (now extinguished). Patient has burns to face, both hands, and anterior chest/abdomen. She was cooking when oil ignited.",
+  vitals:{hr:112,bp:"108/68",rr:24,spo2:95,gcs:15,temp:null,bg:null},
+  history:{pmh:"Asthma",meds:"Albuterol PRN",allergies:"Sulfa"},
+  presentation:"Alert, in pain. Partial and full thickness burns to face (singed eyebrows, singed nasal hair), anterior chest, abdomen, and both hands (circumferential). Hoarse voice. Soot in nares and mouth. No stridor currently.",
+  primary_protocol:"04.07A",related_protocols:["04.20","02.08A","05.01A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"Estimate the total body surface area (TBSA) affected using the Rule of Nines for this patient (face, anterior chest, abdomen, both hands).",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Approximately 24-27% TBSA (Face 4.5%, Anterior chest 9%, Abdomen 9%, Hands ~2-5%)",correct:true,explanation:"Rule of Nines: Head/face = 9% (half = 4.5%), anterior trunk = 18% (chest 9% + abdomen 9%), each hand ~2.5%. Total approximately 24-27%.",protocol_ref:"04.07A"},
+       {text:"Approximately 10% TBSA",correct:false,explanation:"This significantly underestimates. The anterior trunk alone is 18%.",protocol_ref:"04.07A"},
+       {text:"Approximately 45% TBSA",correct:false,explanation:"This overestimates. The burned areas total approximately 24-27%.",protocol_ref:"04.07A"},
+       {text:"Approximately 50% TBSA",correct:false,explanation:"This is a significant overestimate for the described burn areas.",protocol_ref:"04.07A"}
+     ]},
+    {phase:"assessment",prompt:"What burn severity classification does this patient meet?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Critical — > 15% TBSA with burns involving face and hands, plus suspected inhalation injury",correct:true,explanation:"Per RI protocol, critical burn: > 15% TBSA or burns with airway compromise or burns involving face, hands, genitalia, perineum, or major joints.",protocol_ref:"04.07A"},
+       {text:"Serious — 5-15% TBSA",correct:false,explanation:"This patient exceeds 15% TBSA and has burns to face/hands plus inhalation injury signs.",protocol_ref:"04.07A"},
+       {text:"Minor — < 5% TBSA",correct:false,explanation:"This far exceeds minor burn criteria.",protocol_ref:"04.07A"},
+       {text:"Cannot classify without knowing exact depth of burns",correct:false,explanation:"The TBSA percentage, location (face, hands), and inhalation injury signs are sufficient to classify as critical.",protocol_ref:"04.07A"}
+     ]},
+    {phase:"assessment",prompt:"What findings suggest potential inhalation injury that may require advanced airway management?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Singed nasal hair and eyebrows",correct:true,explanation:"Singed facial/nasal hair indicates superheated air exposure and potential airway burns.",protocol_ref:"04.07A"},
+       {text:"Soot in nares and mouth",correct:true,explanation:"Soot in the airway indicates smoke/flame inhalation and potential airway injury.",protocol_ref:"04.07A"},
+       {text:"Hoarse voice",correct:true,explanation:"Hoarseness indicates laryngeal edema, which can progress to complete obstruction.",protocol_ref:"04.07A"},
+       {text:"Facial burns",correct:true,explanation:"Burns to the face indicate exposure of the airway to heat and increase inhalation injury risk.",protocol_ref:"04.07A"},
+       {text:"Burns to the hands",correct:false,explanation:"Hand burns, while serious, do not indicate inhalation injury.",protocol_ref:"04.07A"}
+     ]},
+    {phase:"treatment",prompt:"What should be done for the burn wounds at the EMT level?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Stop the burning process, remove non-adherent clothing, remove constricting items (rings, bracelets)",correct:true,explanation:"Per RI protocol, stop the burning process, remove smoldering and non-adherent clothing, remove constricting items.",protocol_ref:"04.07A"},
+       {text:"Apply dry, clean, sterile dressings",correct:true,explanation:"Per protocol, apply dry clean sterile sheet or dressing.",protocol_ref:"04.07A"},
+       {text:"Monitor SpCO if available; if CO suspected, manage per CO Exposure protocol",correct:true,explanation:"Per protocol, monitor carboxyhemoglobin if available. If CO exposure suspected, manage per Carbon Monoxide Exposure Protocol.",protocol_ref:"04.07A"},
+       {text:"Apply ice directly to the burns",correct:false,explanation:"Ice is contraindicated for burns — it can cause additional tissue damage and hypothermia.",protocol_ref:"04.07A"},
+       {text:"Apply butter or petroleum jelly to the burns",correct:false,explanation:"Home remedies like butter are contraindicated and can worsen burns and trap heat.",protocol_ref:"04.07A"}
+     ]},
+    {phase:"transport",prompt:"Where should this critical burn patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"ABA Verified Adult Burn Center (Rhode Island Hospital)",correct:true,explanation:"Per RI protocol Table 2, Rhode Island Hospital is the ABA Verified Adult Burn Center. Critical burns should be transported to a burn center.",protocol_ref:"04.07A"},
+       {text:"Any hospital emergency department",correct:false,explanation:"Critical burns should go to a verified burn center for specialized care.",protocol_ref:"04.07A"},
+       {text:"Hasbro Children's Hospital",correct:false,explanation:"Hasbro is the pediatric burn center. This is a 48-year-old adult.",protocol_ref:"04.07A"},
+       {text:"Nearest urgent care",correct:false,explanation:"Critical burns require burn center capabilities, not urgent care.",protocol_ref:"04.07A"}
+     ]}
+  ]
+},
+{
+  id:"trauma-hemorrhage-01",title:"Construction Site Injury",category:"Trauma",difficulty:"Easy",
+  dispatch:"Respond to a construction site for a worker with a severe leg laceration.",
+  patient:{age:38,sex:"M",cc:"Severe leg laceration"},
+  scene:"Active construction site. Worker was struck by a piece of sheet metal, resulting in a deep laceration to the left thigh. Significant blood loss on the ground. Coworkers applying direct pressure with a rag.",
+  vitals:{hr:118,bp:"96/64",rr:24,spo2:96,gcs:15,temp:null,bg:null},
+  history:{pmh:"None",meds:"None",allergies:"NKDA"},
+  presentation:"Alert, anxious. Deep laceration to left medial thigh, approximately 15 cm, with arterial spurting despite direct pressure. Estimated blood loss > 500 mL on scene. Skin pale, cool, diaphoretic. Tachycardic.",
+  primary_protocol:"04.04",related_protocols:["02.21A","04.01A"],level_min:"E",
+  questions:[
+    {phase:"treatment",prompt:"Direct pressure is not controlling the hemorrhage from this extremity wound. What is the next step?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Apply a hemostatic tourniquet proximal to the wound",correct:true,explanation:"Per RI protocol, if direct pressure is ineffective and the wound is amenable to tourniquet placement (extremity injury), apply a hemostatic tourniquet.",protocol_ref:"04.04"},
+       {text:"Apply more gauze and hold harder",correct:false,explanation:"If direct pressure is ineffective, protocol directs escalation to tourniquet for extremity wounds.",protocol_ref:"04.04"},
+       {text:"Elevate the extremity and wait",correct:false,explanation:"Elevation alone will not control arterial hemorrhage. Tourniquet is indicated.",protocol_ref:"04.04"},
+       {text:"Apply a pressure point above the wound",correct:false,explanation:"Pressure points are not reliable for significant hemorrhage. Tourniquet is the indicated intervention.",protocol_ref:"04.04"}
+     ]},
+    {phase:"treatment",prompt:"What are the signs that the tourniquet is properly applied?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Bleeding stops",correct:true,explanation:"Per RI protocol, a properly applied tourniquet should stop bleeding.",protocol_ref:"04.04"},
+       {text:"Distal pulse is eliminated",correct:true,explanation:"Per protocol, tourniquets properly applied should both stop bleeding and eliminate the distal pulse.",protocol_ref:"04.04"},
+       {text:"Patient reports tourniquet site pain",correct:false,explanation:"While pain is expected, it's not a criterion for proper application. Cessation of bleeding and loss of distal pulse are.",protocol_ref:"04.04"},
+       {text:"Wound continues to ooze slightly",correct:false,explanation:"Continued oozing suggests the tourniquet is not tight enough. It should stop all bleeding.",protocol_ref:"04.04"}
+     ]},
+    {phase:"treatment",prompt:"After tourniquet application, what ongoing assessment is important?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Reassess for bleeding after tourniquet application throughout transport",correct:true,explanation:"Per RI protocol notes, reassess for bleeding after tourniquet application throughout the course of care.",protocol_ref:"04.04"},
+       {text:"Remove the tourniquet after 5 minutes to check circulation",correct:false,explanation:"Do not remove a tourniquet that is controlling hemorrhage. Reassess for continued bleeding control.",protocol_ref:"04.04"},
+       {text:"No further assessment needed once tourniquet is applied",correct:false,explanation:"Continuous reassessment is required to ensure the tourniquet remains effective.",protocol_ref:"04.04"},
+       {text:"Loosen the tourniquet periodically to allow blood flow",correct:false,explanation:"Do not loosen a tourniquet controlling life-threatening hemorrhage. This can result in exsanguination.",protocol_ref:"04.04"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Nearest appropriate Hospital Emergency Facility; consider Level 1 Trauma Center if triage criteria are met",correct:true,explanation:"With significant hemorrhage and signs of hemorrhagic shock (tachycardia, hypotension), consider Level 1 Trauma Center per triage criteria.",protocol_ref:"04.04"},
+       {text:"Urgent care center",correct:false,explanation:"Arterial hemorrhage with signs of shock requires an emergency department, not urgent care.",protocol_ref:"04.04"},
+       {text:"Patient's primary care physician",correct:false,explanation:"This is an emergency requiring immediate hospital care.",protocol_ref:"04.04"},
+       {text:"No transport needed if bleeding is controlled",correct:false,explanation:"Significant blood loss with tourniquet in place requires hospital evaluation and definitive care.",protocol_ref:"04.04"}
+     ]}
+  ]
+},
+{
+  id:"trauma-spinal-01",title:"Diving Accident",category:"Trauma",difficulty:"Medium",
+  dispatch:"Respond to a public beach for a 19-year-old male with neck pain after diving into shallow water.",
+  patient:{age:19,sex:"M",cc:"Neck pain after diving accident"},
+  scene:"Public beach. Patient dove into shallow water head-first and struck the bottom. Bystanders pulled him from the water. He is lying supine on the sand, unable to move his legs.",
+  vitals:{hr:62,bp:"86/52",rr:20,spo2:97,gcs:15,temp:null,bg:null},
+  history:{pmh:"None",meds:"None",allergies:"NKDA"},
+  presentation:"Alert, oriented, severe neck pain. Cannot feel or move bilateral lower extremities. Diminished sensation in bilateral upper extremities. Priapism noted. Bradycardia with hypotension (neurogenic shock).",
+  primary_protocol:"04.03",related_protocols:["04.01A","02.20A"],level_min:"E",
+  questions:[
+    {phase:"assessment",prompt:"Which criteria mandate spinal precautions for this patient? (Select all that apply)",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Axial load to head/neck (diving)",correct:true,explanation:"Per RI Spinal Precautions protocol, axial load to head/neck (diving) is a specific criterion requiring spinal precautions.",protocol_ref:"04.03"},
+       {text:"Neurologic symptoms — numbness and weakness",correct:true,explanation:"Radiating pain, numbness, or weakness are symptoms concerning for spinal cord injury requiring precautions.",protocol_ref:"04.03"},
+       {text:"Mechanism of injury with risk for spinal injury",correct:true,explanation:"Diving into shallow water is a classic high-risk mechanism for cervical spine injury.",protocol_ref:"04.03"},
+       {text:"Patient age under 20",correct:false,explanation:"Age < 3 or > 65 is the age criterion. Age 19 does not independently meet age criteria, though other criteria are clearly met.",protocol_ref:"04.03"}
+     ]},
+    {phase:"assessment",prompt:"The patient has bradycardia (HR 62) with hypotension (86/52) but warm, dry skin below the level of injury. What type of shock is this?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Neurogenic shock — spinal cord injury causing loss of sympathetic tone",correct:true,explanation:"Neurogenic shock presents with bradycardia, hypotension, and warm/dry skin (loss of sympathetic tone). Classic triad in spinal cord injury.",protocol_ref:"02.20A"},
+       {text:"Hemorrhagic shock",correct:false,explanation:"Hemorrhagic shock presents with tachycardia and cool/clammy skin, not bradycardia with warm skin.",protocol_ref:"02.21A"},
+       {text:"Cardiogenic shock",correct:false,explanation:"Cardiogenic shock would present with JVD, crackles, and cool/clammy skin.",protocol_ref:"02.20A"},
+       {text:"Septic shock",correct:false,explanation:"Septic shock requires an infection source and develops over hours, not acutely after trauma.",protocol_ref:"02.22A"}
+     ]},
+    {phase:"treatment",prompt:"What spinal precautions should be applied?",multi_select:true,level_filter:"EACP",
+     options:[
+       {text:"Rigid cervical collar",correct:true,explanation:"Per RI protocol, apply a rigid cervical collar for patients meeting spinal precaution criteria.",protocol_ref:"04.03"},
+       {text:"Spinal motion restriction on a long backboard or vacuum mattress",correct:true,explanation:"Full spinal motion restriction is indicated for this patient with clear spinal cord injury signs.",protocol_ref:"04.03"},
+       {text:"Maintain manual in-line cervical stabilization during all movement",correct:true,explanation:"Manual stabilization should be maintained throughout patient care and movement.",protocol_ref:"04.03"},
+       {text:"Tape the head to the board without a collar",correct:false,explanation:"A rigid cervical collar is the standard device for cervical immobilization per protocol.",protocol_ref:"04.03"}
+     ]},
+    {phase:"treatment",prompt:"How should the hypotension from neurogenic shock be managed at the ALS level?",multi_select:false,level_filter:"ACP",
+     options:[
+       {text:"Normal saline IV bolus per General Shock and Hypotension Protocol; vasopressors if refractory",correct:true,explanation:"Per protocol, manage hypotension per the age appropriate General Shock and Hypotension Protocol with IV fluids, then vasopressors if needed.",protocol_ref:"02.20A"},
+       {text:"Trendelenburg position only",correct:false,explanation:"While positioning may help, IV fluid resuscitation is the primary treatment.",protocol_ref:"02.20A"},
+       {text:"Atropine for the bradycardia only",correct:false,explanation:"Both the bradycardia and hypotension need to be addressed. IV fluids are first-line.",protocol_ref:"02.20A"},
+       {text:"No treatment — neurogenic shock resolves on its own",correct:false,explanation:"Neurogenic shock requires active management with fluids and potentially vasopressors.",protocol_ref:"02.20A"}
+     ]},
+    {phase:"transport",prompt:"Where should this patient be transported?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Level 1 Trauma Center (Rhode Island Hospital)",correct:true,explanation:"Spinal cord injury with neurologic deficits requires Level 1 Trauma Center capabilities for neurosurgical consultation.",protocol_ref:"04.01A"},
+       {text:"Nearest community hospital",correct:false,explanation:"Spinal cord injury with neurologic deficits requires the specialized resources of a Level 1 Trauma Center.",protocol_ref:"04.01A"},
+       {text:"Orthopedic specialty clinic",correct:false,explanation:"Acute spinal cord injury is an emergency requiring trauma center care.",protocol_ref:"04.01A"},
+       {text:"Physical rehabilitation facility",correct:false,explanation:"Rehabilitation comes later. Acute spinal cord injury requires emergency trauma care.",protocol_ref:"04.01A"}
+     ]}
+  ]
+},
+// ── PEDIATRIC ──
+{
+  id:"peds-ams-01",title:"Lethargic Toddler",category:"Pediatric",difficulty:"Medium",
+  dispatch:"Respond to a residence for a 2-year-old who is lethargic and not acting right.",
+  patient:{age:2,sex:"M",cc:"Lethargic, not acting normal"},
+  scene:"Single family home. Mother is holding a limp 2-year-old. She reports he was fine yesterday but has been progressively more lethargic today. No fever. The grandmother's purse is open on the floor with pill bottles visible.",
+  vitals:{hr:68,bp:"78/50",rr:8,spo2:88,gcs:7,temp:"97.4°F",bg:"90 mg/dL"},
+  history:{pmh:"None, healthy child",meds:"None",allergies:"NKDA"},
+  presentation:"Limp, minimally responsive toddler. Pinpoint pupils. Respiratory rate of 8 with shallow breathing. Bradycardic for age. Grandmother's methadone and oxycodone bottles found open nearby.",
+  primary_protocol:"04.18A",related_protocols:["02.05P","05.01P"],level_min:"E",
+  questions:[
+    {phase:"scene",prompt:"What is the likely etiology of this child's altered mental status based on scene findings?",multi_select:false,level_filter:"EACP",
+     options:[
+       {text:"Accidental opioid ingestion — pinpoint pupils, respiratory depression, bradycardia with grandmother's opioid medications accessible",correct:true,explanation:"Pinpoint pupils, respiratory depression, and bradycardia in a toddler with accessible opioid medications is classic accidental opioid ingestion.",protocol_ref:"04.18A"},
+       {text:"Febrile seizure",correct:false,explanation:"The child is afebrile (97.4°F) and the presentation doesn't match seizure activity.",protocol_ref:"02.19P"},
+       {text:"
