@@ -702,6 +702,15 @@ function renderScenario() {
     html += `<div class="multi-hint">Select all that apply</div>`;
   }
 
+  // Shuffle options (seeded per question to stay stable on re-render)
+  if (!q._shuffled) {
+    for (let j = q.options.length - 1; j > 0; j--) {
+      const k = Math.floor(Math.random() * (j + 1));
+      [q.options[j], q.options[k]] = [q.options[k], q.options[j]];
+    }
+    q._shuffled = true;
+  }
+
   // Options
   q.options.forEach((opt, i) => {
     let cls = 'option';
