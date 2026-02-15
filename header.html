@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e1a">
+<title>RI EMS Scenario Trainer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-y:scroll;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,SF Pro,Inter,system-ui,sans-serif;background:#0a0e1a;color:#fff;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  touch-action:pan-y;min-height:100dvh}
+.container{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
+.subtitle{text-align:center;color:#8b92a8;margin-bottom:24px;font-size:.95em}
+.card{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px;transition:all .2s;cursor:pointer;border:2px solid transparent}
+.card:active{transform:scale(.98)}
+.card.selected{border-color:#d9534f}
+.level-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.level-card{text-align:center;padding:20px 12px;font-weight:600;font-size:1.1em}
+.level-card .desc{font-size:.75em;font-weight:400;color:#8b92a8;margin-top:6px}
+.level-card[data-level="E"]{border-color:#f0ad4e;color:#f0ad4e}
+.level-card[data-level="E"].selected{background:rgba(240,173,78,.15);border-color:#f0ad4e}
+.level-card[data-level="A"]{border-color:#34c759;color:#34c759}
+.level-card[data-level="A"].selected{background:rgba(52,199,89,.15);border-color:#34c759}
+.level-card[data-level="C"]{border-color:#4a9eff;color:#4a9eff}
+.level-card[data-level="C"].selected{background:rgba(74,158,255,.15);border-color:#4a9eff}
+.level-card[data-level="P"]{border-color:#d9534f;color:#d9534f}
+.level-card[data-level="P"].selected{background:rgba(217,83,79,.15);border-color:#d9534f}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:#d9534f;color:#fff}
+.btn-primary:disabled{background:#333;color:#666;cursor:not-allowed}
+.btn-secondary{background:#1e2440;color:#fff;border:1px solid #2a3154}
+.btn-small{display:inline-block;width:auto;padding:8px 16px;font-size:.9em;margin:4px}
+.progress-bar{display:flex;gap:4px;margin-bottom:20px}
+.progress-step{flex:1;text-align:center;font-size:.7em;color:#8b92a8;padding-bottom:8px;border-bottom:3px solid #1e2440}
+.progress-step.active{color:#d9534f;border-color:#d9534f}
+.progress-step.done{color:#34c759;border-color:#34c759}
+.narrative{background:#141929;border-radius:12px;padding:16px;margin-bottom:16px;line-height:1.6;font-size:.95em}
+.narrative .label{color:#d9534f;font-weight:600;font-size:.8em;text-transform:uppercase;margin-bottom:6px}
+.vitals-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.vital{background:#0d1020;border-radius:8px;padding:8px;text-align:center}
+.vital .val{font-size:1.1em;font-weight:600}
+.vital .lbl{font-size:.7em;color:#8b92a8;margin-top:2px}
+.option{background:#141929;border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;border:2px solid #1e2440;transition:all .2s;line-height:1.4}
+.option:active{transform:scale(.98)}
+.option.selected{border-color:#4a9eff;background:rgba(74,158,255,.1)}
+.option.correct{border-color:#34c759;background:rgba(52,199,89,.15)}
+.option.incorrect{border-color:#d9534f;background:rgba(217,83,79,.15)}
+.option.missed{border-color:#f0ad4e;background:rgba(240,173,78,.1)}
+.option .indicator{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.option.correct .indicator{background:#34c759}
+.option.incorrect .indicator{background:#d9534f}
+.option.missed .indicator{background:#f0ad4e}
+.explanation{font-size:.85em;color:#8b92a8;margin-top:8px;padding:10px;background:#0d1020;border-radius:8px;line-height:1.5}
+.explanation .ref{color:#4a9eff;font-weight:500}
+.question-prompt{font-size:1em;font-weight:500;margin-bottom:12px;line-height:1.5}
+.multi-hint{font-size:.8em;color:#8b92a8;margin-bottom:8px}
+.score-circle{width:120px;height:120px;border-radius:50%;margin:20px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2em;font-weight:700}
+.score-good{background:rgba(52,199,89,.2);color:#34c759;border:3px solid #34c759}
+.score-ok{background:rgba(240,173,78,.2);color:#f0ad4e;border:3px solid #f0ad4e}
+.score-bad{background:rgba(217,83,79,.2);color:#d9534f;border:3px solid #d9534f}
+.score-circle .pct{font-size:.4em;font-weight:400}
+.review-item{background:#141929;border-radius:12px;padding:14px;margin-bottom:10px}
+.review-item .q{font-weight:500;margin-bottom:6px;font-size:.95em}
+.review-item .your-ans{font-size:.85em;margin-bottom:4px}
+.review-item .correct-ans{font-size:.85em;color:#34c759}
+.review-item .wrong{color:#d9534f}
+.tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:.7em;font-weight:600;margin-right:4px}
+.tag-easy{background:rgba(52,199,89,.2);color:#34c759}
+.tag-medium{background:rgba(240,173,78,.2);color:#f0ad4e}
+.tag-hard{background:rgba(217,83,79,.2);color:#d9534f}
+.tag-proto{background:rgba(74,158,255,.2);color:#4a9eff}
+.category-header{color:#8b92a8;font-size:.8em;font-weight:600;text-transform:uppercase;margin:16px 0 8px;letter-spacing:.5px}
+.scenario-item{display:flex;justify-content:space-between;align-items:center}
+.scenario-item .title{font-weight:500;font-size:.95em}
+.scenario-item .tags{margin-top:4px}
+.hidden{display:none!important}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.back-btn{background:none;border:none;color:#8b92a8;font-size:.9em;cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:4px}
+.back-btn:before{content:'←'}
+.phase-label{display:inline-block;background:rgba(217,83,79,.2);color:#d9534f;padding:4px 10px;border-radius:6px;font-size:.75em;font-weight:600;margin-bottom:12px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
