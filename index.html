@@ -826,7 +826,8 @@ function renderDebrief() {
   });
 
   html += `
-    <button class="btn btn-primary" onclick="startScenario('${s.id}')" style="margin-top:16px">🔄 Try Again</button>
+    <button class="btn btn-primary" onclick="startRandom()" style="margin-top:16px">🎲 Next Random Scenario</button>
+    <button class="btn btn-secondary" onclick="startScenario('${s.id}')">🔄 Try Again</button>
     <button class="btn btn-secondary" onclick="state.screen='select';render()">← Choose Another Scenario</button>
     <button class="btn btn-secondary" onclick="state.screen='home';render()">🏠 Home</button>
     <div style="height:40px"></div>
