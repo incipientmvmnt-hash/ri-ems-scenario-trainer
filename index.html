@@ -796,7 +796,6 @@ function renderSelect() {
               <div class="title">${s.title}</div>
               <div class="tags" style="margin-top:6px">
                 <span class="tag ${diffClass}">${s.difficulty}</span>
-                <span class="tag tag-proto">${s.primary_protocol}</span>
               </div>
             </div>
             <span style="color:#8b92a8">›</span>
@@ -881,7 +880,7 @@ function renderScenario() {
   let html = `
     <button class="back-btn" onclick="state.screen='select';render()">Exit Scenario</button>
     ${progressHtml}
-    <div style="margin-bottom:6px"><span class="tag tag-proto">${s.primary_protocol}</span> <span style="color:#8b92a8;font-size:.85em">${s.title}</span></div>
+    <div style="margin-bottom:6px"><span style="color:#8b92a8;font-size:.85em">${s.title}</span></div>
   `;
 
   // Show dispatch/scene on first question
