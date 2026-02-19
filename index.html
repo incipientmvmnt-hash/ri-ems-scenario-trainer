@@ -14,11 +14,14 @@
 html{overflow-y:scroll;-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,SF Pro,Inter,system-ui,sans-serif;background:#0a0e1a;color:#fff;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  touch-action:pan-y;min-height:100dvh}
+  touch-action:pan-y;min-height:100dvh;
+  background-image:radial-gradient(ellipse at 20% 50%, rgba(74,158,255,.08) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 20%, rgba(217,83,79,.06) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 80%, rgba(52,199,89,.05) 0%, transparent 50%)}
 .container{max-width:600px;margin:0 auto;padding:16px}
 h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
 .subtitle{text-align:center;color:#8b92a8;margin-bottom:24px;font-size:.95em}
-.card{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px;transition:all .2s;cursor:pointer;border:2px solid transparent}
+.card{background:rgba(20,25,41,.6);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:12px;padding:16px;margin-bottom:12px;transition:all .2s;cursor:pointer;border:1px solid rgba(255,255,255,.08)}
 .card:active{transform:scale(.98)}
 .card.selected{border-color:#d9534f}
 .level-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
@@ -34,21 +37,21 @@ h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
 .level-card[data-level="P"].selected{background:rgba(217,83,79,.15);border-color:#d9534f}
 .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:#d9534f;color:#fff}
+.btn-primary{background:rgba(217,83,79,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border:1px solid rgba(255,255,255,.1)}
 .btn-primary:disabled{background:#333;color:#666;cursor:not-allowed}
-.btn-secondary{background:#1e2440;color:#fff;border:1px solid #2a3154}
+.btn-secondary{background:rgba(30,36,64,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border:1px solid rgba(255,255,255,.1)}
 .btn-small{display:inline-block;width:auto;padding:8px 16px;font-size:.9em;margin:4px}
 .progress-bar{display:flex;gap:4px;margin-bottom:20px}
-.progress-step{flex:1;text-align:center;font-size:.7em;color:#8b92a8;padding-bottom:8px;border-bottom:3px solid #1e2440}
+.progress-step{flex:1;text-align:center;font-size:.7em;color:#8b92a8;padding-bottom:8px;border-bottom:3px solid rgba(30,36,64,.6)}
 .progress-step.active{color:#d9534f;border-color:#d9534f}
 .progress-step.done{color:#34c759;border-color:#34c759}
-.narrative{background:#141929;border-radius:12px;padding:16px;margin-bottom:16px;line-height:1.6;font-size:.95em}
+.narrative{background:rgba(20,25,41,.5);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:16px;line-height:1.6;font-size:.95em}
 .narrative .label{color:#d9534f;font-weight:600;font-size:.8em;text-transform:uppercase;margin-bottom:6px}
 .vitals-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
-.vital{background:#0d1020;border-radius:8px;padding:8px;text-align:center}
+.vital{background:rgba(13,16,32,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:8px;text-align:center}
 .vital .val{font-size:1.1em;font-weight:600}
 .vital .lbl{font-size:.7em;color:#8b92a8;margin-top:2px}
-.option{background:#141929;border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;border:2px solid #1e2440;transition:all .2s;line-height:1.4}
+.option{background:rgba(20,25,41,.5);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;border:1px solid rgba(255,255,255,.08);transition:all .2s;line-height:1.4}
 .option:active{transform:scale(.98)}
 .option.selected{border-color:#4a9eff;background:rgba(74,158,255,.1)}
 .option.correct{border-color:#34c759;background:rgba(52,199,89,.15)}
@@ -58,16 +61,16 @@ h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
 .option.correct .indicator{background:#34c759}
 .option.incorrect .indicator{background:#d9534f}
 .option.missed .indicator{background:#f0ad4e}
-.explanation{font-size:.85em;color:#8b92a8;margin-top:8px;padding:10px;background:#0d1020;border-radius:8px;line-height:1.5}
+.explanation{font-size:.85em;color:#8b92a8;margin-top:8px;padding:10px;background:rgba(13,16,32,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.04);border-radius:8px;line-height:1.5}
 .explanation .ref{color:#4a9eff;font-weight:500}
 .question-prompt{font-size:1em;font-weight:500;margin-bottom:12px;line-height:1.5}
 .multi-hint{font-size:.8em;color:#8b92a8;margin-bottom:8px}
-.score-circle{width:120px;height:120px;border-radius:50%;margin:20px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2em;font-weight:700}
+.score-circle{width:120px;height:120px;border-radius:50%;margin:20px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2em;font-weight:700;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 .score-good{background:rgba(52,199,89,.2);color:#34c759;border:3px solid #34c759}
 .score-ok{background:rgba(240,173,78,.2);color:#f0ad4e;border:3px solid #f0ad4e}
 .score-bad{background:rgba(217,83,79,.2);color:#d9534f;border:3px solid #d9534f}
 .score-circle .pct{font-size:.4em;font-weight:400}
-.review-item{background:#141929;border-radius:12px;padding:14px;margin-bottom:10px}
+.review-item{background:rgba(20,25,41,.5);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;margin-bottom:10px}
 .review-item .q{font-weight:500;margin-bottom:6px;font-size:.95em}
 .review-item .your-ans{font-size:.85em;margin-bottom:4px}
 .review-item .correct-ans{font-size:.85em;color:#34c759}
