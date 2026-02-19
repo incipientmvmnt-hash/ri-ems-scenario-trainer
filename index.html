@@ -89,7 +89,7 @@ h1{font-size:1.6em;text-align:center;margin:20px 0 4px}
 .phase-label{display:inline-block;background:rgba(217,83,79,.2);color:#d9534f;padding:4px 10px;border-radius:6px;font-size:.75em;font-weight:600;margin-bottom:12px;text-transform:uppercase}
 .vitals-update-box{background:rgba(217,83,79,.15);border:2px solid #d9534f;border-radius:12px;padding:16px;margin-bottom:16px}
 .vitals-update-box .label{color:#d9534f;font-weight:700;font-size:.9em;margin-bottom:8px}
-.critical-error{background:#b71c1c;color:#fff;border-radius:8px;padding:12px;margin-top:8px;line-height:1.5;font-size:.85em}
+.critical-error{background:rgba(255,152,0,.12);border:1px solid rgba(255,152,0,.4);color:#ffcc80;border-radius:8px;padding:12px;margin-top:8px;line-height:1.5;font-size:.85em}
 .critical-error .critical-title{font-weight:700;font-size:.95em;margin-bottom:4px}
 .clinical-pearl{background:rgba(74,158,255,.12);border:1px solid rgba(74,158,255,.3);border-radius:8px;padding:12px;margin-top:10px;font-size:.85em;line-height:1.5;color:#8bb8f0}
 .clinical-pearl .pearl-title{color:#4a9eff;font-weight:600;margin-bottom:2px}
@@ -1527,7 +1527,7 @@ function renderScenario() {
       } else if (state.selectedOptions.has(i)) {
         cls += ' incorrect';
         if (opt.critical) {
-          extra = `<div class="critical-error"><div class="critical-title">⛔ CRITICAL ERROR — This action could cause patient harm</div>${opt.explanation} <span class="ref" style="color:#ffcdd2">(${opt.protocol_ref})</span></div>`;
+          extra = `<div class="critical-error"><div class="critical-title">⚠️ Important Safety Consideration</div>${opt.explanation} <span class="ref" style="color:#ffcc80">(${opt.protocol_ref})</span></div>`;
         } else {
           extra = `<div class="explanation"><span class="indicator"></span> ❌ ${opt.explanation} <span class="ref">(${opt.protocol_ref})</span></div>`;
         }
@@ -1638,8 +1638,8 @@ function renderDebrief() {
     tierClass = 'tier-developing'; tierName = '📖 Developing';
     tierDesc = "You're building knowledge but need more protocol review before these calls.";
   } else {
-    tierClass = 'tier-novice'; tierName = '📚 Novice';
-    tierDesc = 'Significant gaps in protocol knowledge. Focused study recommended before providing this level of care.';
+    tierClass = 'tier-novice'; tierName = '📚 Building Foundation';
+    tierDesc = 'These are tough scenarios. Review the referenced protocols and try again — repetition builds confidence.';
   }
 
   const criticalFails = state.answers.filter(a => a.criticalFail).length;
@@ -1657,7 +1657,7 @@ function renderDebrief() {
       <div class="tier-name">${tierName}</div>
       <div class="tier-desc">${tierDesc}</div>
     </div>
-    ${criticalFails > 0 ? `<div class="critical-fails-warning">⛔ ${criticalFails} Critical Error${criticalFails > 1 ? 's' : ''} — Actions that could cause patient harm</div>` : ''}
+    ${criticalFails > 0 ? `<div class="critical-fails-warning">⛔ ${criticalFails} Safety Consideration${criticalFails > 1 ? 's' : ''} — Review these carefully for your practice</div>` : ''}
     
     <div class="category-header">Question Review</div>
   `;
@@ -1668,7 +1668,7 @@ function renderDebrief() {
       <div class="review-item" ${a.criticalFail ? 'style="border-left:3px solid #b71c1c"' : ''}>
         <div class="q">${icon} Q${i+1}: ${a.question}</div>
         <div class="your-ans ${a.correct ? '' : 'wrong'}">Your answer: ${a.selected.join(', ')}</div>
-        ${a.criticalFail ? '<div style="color:#ff5252;font-size:.8em;font-weight:600">⛔ CRITICAL ERROR</div>' : ''}
+        ${a.criticalFail ? '<div style="color:#ff5252;font-size:.8em;font-weight:600">⚠️ Safety Consideration</div>' : ''}
         ${!a.correct ? `<div class="correct-ans">Correct: ${a.correctAnswer.join(', ')}</div>` : ''}
         <div style="margin-top:4px"><span class="tag tag-proto">${a.protocol}</span></div>
       </div>`;
